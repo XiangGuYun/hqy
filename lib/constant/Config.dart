@@ -23,4 +23,8 @@ class Config{
   static const String BACK_BLACK = 'assets/images/back_black.png';
   static const String CLOSE = 'assets/images/close.png';
 
+  static const Color BLACK_393649 = Color(0xFF393649);
+
+  static const Color GREY_C9C8CD = Color(0xFFC9C8CD);
+
 }

@@ -7,13 +7,22 @@ import 'package:wobei/my_lib/base/BaseState.dart';
 class TitleBar extends StatelessWidget with BaseUtils {
   ///标题
   final String title;
+
   ///副标题
   final String subTitle;
+
   ///是否需要下方的分割线
   final bool needDivider;
 
+  ///是否需要添加左右外边距
+  final bool needMargin;
+
   TitleBar(
-      {Key key, @required this.title, this.subTitle='', this.needDivider = true})
+      {Key key,
+      @required this.title,
+      this.subTitle = '',
+      this.needDivider = true,
+      this.needMargin = true})
       : super(key: key);
 
   @override
@@ -35,7 +44,7 @@ class TitleBar extends StatelessWidget with BaseUtils {
               ),
               alignment: Alignment(-1, 0),
             ),
-            padding: EdgeInsets.only(left: 20),
+            padding: EdgeInsets.only(left: needMargin?20:0),
           ),
           Center(
             child: Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:wobei/lesson/eventbus/PartB.dart';
 import '../../my_lib/extension/BaseExtension.dart';
-import '事件总线.dart';
+import 'EventBus.dart';
 
 class PageA extends StatelessWidget {
 

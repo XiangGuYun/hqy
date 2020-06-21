@@ -1,7 +1,7 @@
 import 'package:date_format/date_format.dart';
 import 'package:flutter/material.dart';
 
-import '事件总线.dart';
+import 'EventBus.dart';
 
 class PageB extends StatelessWidget {
   @override

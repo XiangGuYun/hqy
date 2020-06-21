@@ -6,13 +6,19 @@ import 'package:flutter/material.dart';
 class VipPriceText extends StatelessWidget {
   ///大文本字体大小
   final int bigFontSize;
+
   ///小文本字体大小
   final int smallFontSize;
+
   ///价格
   final String price;
 
+  ///文字颜色
+  final int color;
+
   VipPriceText(
-      {Key key, this.price, this.bigFontSize = 28, this.smallFontSize = 18})
+      {Key key, this.price, this.bigFontSize = 28, this.smallFontSize = 18,
+      this.color = 0xffB3926F})
       : super(key: key);
 
   @override
@@ -22,19 +28,19 @@ class VipPriceText extends StatelessWidget {
           text: '¥ ',
           style: TextStyle(
               fontSize: smallFontSize.toDouble(),
-              color: Color(0xFFB3926F),
+              color: Color(color),
               fontFamily: 'money')),
       TextSpan(
           text: '${price.contains('.') ? price.split('.')[0] : price}.',
           style: TextStyle(
               fontSize: bigFontSize.toDouble(),
-              color: Color(0xFFB3926F),
+              color: Color(color),
               fontFamily: 'money')),
       TextSpan(
           text: price.contains('.') ? price.split('.')[1] : '00',
           style: TextStyle(
               fontSize: smallFontSize.toDouble(),
-              color: Color(0xFFB3926F),
+              color: Color(color),
               fontFamily: 'money'))
     ]));
   }
