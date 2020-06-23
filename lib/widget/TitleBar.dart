@@ -17,12 +17,16 @@ class TitleBar extends StatelessWidget with BaseUtils {
   ///是否需要添加左右外边距
   final bool needMargin;
 
+  ///副标题点击事件
+  final Function subTitleClick;
+
   TitleBar(
       {Key key,
       @required this.title,
       this.subTitle = '',
       this.needDivider = true,
-      this.needMargin = true})
+      this.needMargin = true,
+      this.subTitleClick})
       : super(key: key);
 
   @override
@@ -44,7 +48,7 @@ class TitleBar extends StatelessWidget with BaseUtils {
               ),
               alignment: Alignment(-1, 0),
             ),
-            padding: EdgeInsets.only(left: needMargin?20:0),
+            padding: EdgeInsets.only(left: needMargin ? 20 : 0),
           ),
           Center(
             child: Text(
@@ -52,7 +56,7 @@ class TitleBar extends StatelessWidget with BaseUtils {
               style: TextStyle(
                   fontSize: 18,
                   color: Color(0xff393649),
-                  fontWeight: FontWeight.w600),
+                  fontWeight: FontWeight.w500),
             ),
           ),
           Align(
@@ -64,9 +68,12 @@ class TitleBar extends StatelessWidget with BaseUtils {
           ),
           Padding(
             child: Align(
-              child: Text(
-                subTitle,
-                style: TextStyle(fontSize: 14, color: Color(0xff393649)),
+              child: GestureDetector(
+                child: Text(
+                  subTitle,
+                  style: TextStyle(fontSize: 14, color: Color(0xff393649)),
+                ),
+                onTap: subTitleClick,
               ),
               alignment: Alignment(1, 0),
             ),

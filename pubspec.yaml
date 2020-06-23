@@ -105,6 +105,33 @@ flutter:
     - assets/images/close.png
     - assets/images/2.0x/close.png
     - assets/images/3.0x/close.png
+    - assets/images/default_bg.png
+    - assets/images/2.0x/default_bg.png
+    - assets/images/3.0x/default_bg.png
+    - assets/images/settings_white.png
+    - assets/images/2.0x/settings_white.png
+    - assets/images/3.0x/settings_white.png
+    - assets/images/message_white.png
+    - assets/images/2.0x/message_white.png
+    - assets/images/3.0x/message_white.png
+    - assets/images/arc.png
+    - assets/images/2.0x/arc.png
+    - assets/images/3.0x/arc.png
+    - assets/images/vip.png
+    - assets/images/2.0x/vip.png
+    - assets/images/3.0x/vip.png
+    - assets/images/right_exchange.png
+    - assets/images/2.0x/right_exchange.png
+    - assets/images/3.0x/right_exchange.png
+    - assets/images/red_packet.png
+    - assets/images/2.0x/red_packet.png
+    - assets/images/3.0x/red_packet.png
+    - assets/images/vip_exchange.png
+    - assets/images/2.0x/vip_exchange.png
+    - assets/images/3.0x/vip_exchange.png
+    - assets/images/detail_hecard.png
+    - assets/images/2.0x/detail_hecard.png
+    - assets/images/3.0x/detail_hecard.png
 
 
     # To add assets to your application, add an assets section, like this:
