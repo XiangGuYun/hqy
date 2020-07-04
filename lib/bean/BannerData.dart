@@ -1,10 +1,11 @@
+///轮播图数据
 class BannerData {
   int id;
   int itemId;
   String jumpType;
   String jumpUrl;
   String name;
-  String port;
+  int port;
   String position;
   int state;
   String status;

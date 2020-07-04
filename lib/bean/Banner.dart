@@ -8,7 +8,7 @@ class HbBanner {
 
     HbBanner({this.data, this.code, this.msg, this.success});
 
-    factory HbBanner.fromJson(Map<String, dynamic> json) {
+    factory HbBanner.fromJson(var json) {
         return HbBanner(
             data: json['data'] != null ? (json['data'] as List).map((i) => BannerData.fromJson(i)).toList() : null,
             code: json['code'],

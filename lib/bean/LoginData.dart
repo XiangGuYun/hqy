@@ -1,3 +1,4 @@
+///登录数据
 class LoginData {
     String token;
     int type;

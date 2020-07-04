@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:wobei/bean/Banner.dart';
 import 'package:wobei/bean/LoginData.dart';
 import 'package:wobei/constant/URL.dart';
@@ -34,7 +35,7 @@ class Req {
   static void getPicVerificationCode() {}
 
   ///获取轮播栏的信息
-  static void getBannerInfo(Function callback, {isHomePage = true}) {
+  static Future<Response> getBannerInfo({isHomePage = true}) async {
     var params = Map<String, String>();
     if (isHomePage) {
       params['position'] = "1";
@@ -42,8 +43,6 @@ class Req {
       params['position'] = "2";
     }
     params['port'] = '3';
-    NetUtils.post1(URL.LUN_BO_TU, params, (response) {
-      callback(response);
-    });
+    return  await NetUtils.post2(URL.LUN_BO_TU, params);
   }
 }

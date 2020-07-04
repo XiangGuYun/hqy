@@ -4,8 +4,10 @@ import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:package_info/package_info.dart';
+import 'package:wobei/common/Global.dart';
 import 'package:wobei/my_lib/utils/AppUtils.dart';
 import 'package:wobei/my_lib/utils/SPUtils.dart';
+import 'package:wobei/my_lib/utils/System.dart';
 import 'package:wobei/my_lib/utils/ToastUtils.dart';
 
 import '../../constant/URL.dart';
@@ -24,14 +26,14 @@ class NetUtils {
     //获取包信息
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     //获取当前时间
-    var currentTime = DateTime.now().millisecond;
+    var currentTime = System.currentTimeMillis();
     //获取设备ID
     String deviceId;
     AppUtils.getDeviceId((id){
       deviceId = id;
     });
     //生成md5加密数据
-    var hbSign = _generateMd5('HB_ANDROID_USER$currentTime${packageInfo.version}');
+    var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
     SPUtils.getString("token", (token){
       if(token.toString().isNotEmpty){
@@ -43,9 +45,9 @@ class NetUtils {
     var options = Options(headers: headers);
     //将共同参数放入到map中
     parameters['c'] = 'HB_ANDROID_USER';
-    parameters['d'] = deviceId;
+    parameters['d'] = Global.deviceId;
     parameters['t'] = currentTime.toString();
-    parameters['v'] = packageInfo.version;
+    parameters['v'] = '1.5.0';
     //获取响应结果
     Response response =
     await Dio().post(URL.BASE_URL+url, queryParameters: parameters, options: options);
@@ -99,14 +101,11 @@ class NetUtils {
     //获取包信息
     PackageInfo packageInfo = await PackageInfo.fromPlatform();
     //获取当前时间
-    var currentTime = DateTime.now().millisecond;
+    var currentTime = System.currentTimeMillis().toString();
     //获取设备ID
     String deviceId;
-    AppUtils.getDeviceId((id){
-      deviceId = id;
-    });
     //生成md5加密数据
-    var hbSign = _generateMd5('HB_ANDROID_USER$currentTime${packageInfo.version}');
+    var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
     SPUtils.getString("token", (token){
       if(token.toString().isNotEmpty){
@@ -119,9 +118,14 @@ class NetUtils {
     var options = Options(headers: headers);
     //将共同参数放入到map中
     parameters['c'] = 'HB_ANDROID_USER';
-    parameters['d'] = deviceId;
-    parameters['t'] = currentTime.toString();
-    parameters['v'] = packageInfo.version;
+    parameters['d'] = Global.deviceId;
+    parameters['t'] = currentTime;
+    parameters['v'] = '1.5.0';
+
+    parameters.forEach((s1, s2){
+      print("传参 $s1 $s2");
+    });
+
     //获取响应结果
     Response response =
     await Dio().post(URL.BASE_URL+url, queryParameters: parameters, options: options);
@@ -144,6 +148,62 @@ class NetUtils {
     } else {
       print(json.encode(response));
     }
+  }
+
+  static Future<Response> post2(String url, Map<String, String> parameters, {handleBySelf=false, getBitmap = false}) async {
+    //放置请求头参数
+    var headers = Map<String, dynamic>();
+
+    //获取包信息
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    //获取当前时间
+    var currentTime = System.currentTimeMillis().toString();
+    //获取设备ID
+    String deviceId;
+    //生成md5加密数据
+    var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
+    headers['Hb-sign'] = hbSign;
+    SPUtils.getString("token", (token){
+      if(token.toString().isNotEmpty){
+        headers['Authorization'] = 'Bearer $token';
+        SPUtils.putString("token", token);
+      }
+    });
+
+    //将md5数据放入请求头
+    var options = Options(headers: headers);
+    //将共同参数放入到map中
+    parameters['c'] = 'HB_ANDROID_USER';
+    parameters['d'] = Global.deviceId;
+    parameters['t'] = currentTime;
+    parameters['v'] = '1.5.0';
+
+    parameters.forEach((s1, s2){
+      print("传参 $s1 $s2");
+    });
+
+    //获取响应结果
+    Response response =
+    await Dio().post(URL.BASE_URL+url, queryParameters: parameters, options: options);
+    if([4004, 4005, 15210].contains(response.data['code'])){
+      //对特定错误响应码进行处理
+      _handleCode(response.data['code']);
+      return null;
+    }
+    if(!getBitmap){
+      print(json.encode(response.data));
+      if(!handleBySelf){
+        if(response.data['success']){
+
+        } else {
+          ToastUtils.show(response.data['msg']);
+        }
+      } else {
+      }
+    } else {
+      print(json.encode(response));
+    }
+    return response;
   }
 
 }

@@ -26,16 +26,16 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
   List<BannerData> bannerList = [];
 
   @override
-  void initState() {
+  void initState(){
     super.initState();
     showStatusBar();
     setStatusBarColor(true, Colors.transparent);
-//    Req.getBannerInfo((response){
-//      var banner = HbBanner.fromJson(response);
-//      setState(() {
-//        bannerList.addAll(banner.data);
-//      });
-//    });
+    Req.getBannerInfo().then((response){
+      var banner = HbBanner.fromJson(response.data);
+      setState(() {
+        bannerList.addAll(banner.data);
+      });
+    });
   }
 
   @override
@@ -130,14 +130,14 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
   ///****************************************************************************
   Widget getBanner() {
     return Swiper(
+      key: UniqueKey(),
       itemBuilder: (BuildContext context, int index) {
         return Image.network(
-//          bannerList[index].url,
-          getTestImgUrl(index),
+          bannerList[index].url,
           fit: BoxFit.cover,
         );
       },
-      itemCount: 3, //bannerList.length,
+      itemCount: bannerList.length,
       pagination: SwiperCustomPagination(
           builder: (BuildContext context, SwiperPluginConfig config) {
         print(config.activeIndex); //当前显示的索引值

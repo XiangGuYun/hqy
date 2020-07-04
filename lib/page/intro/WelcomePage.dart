@@ -43,28 +43,35 @@ class _AppState extends State<App> {
       Future.delayed(Duration(milliseconds: 2000 - (time2 - time1)), () {
         if (success) {
           var _data = AdData.fromJson(data);
-          if (_data.isHave) { //如果有广告
+          if (_data.isHave) {
+            //如果有广告
             PathUtils.getTempPath().then((path) {
               //记录缓存地址
               StorageUtils.set(Config.TEMP_PATH, path);
-              File('${path}/ad.jpg').exists().then((exists){
-                if(!exists){
+              File('${path}/ad.jpg').exists().then((exists) {
+                if (!exists) {
                   //如果广告图不存在则下载到缓存路径，然后跳转广告页
-                  Dio().download(_data.imageUrl, '$path/ad.jpg').then((response) {
+                  Dio()
+                      .download(_data.imageUrl, '$path/ad.jpg')
+                      .then((response) {
                     Navigator.of(context).pushNamedAndRemoveUntil(
-                        AppRoute.AD_PAGE, ModalRoute.withName(AppRoute.WELCOME_PAGE),
+                        AppRoute.AD_PAGE,
+                        ModalRoute.withName(AppRoute.WELCOME_PAGE),
                         arguments: {'path': path});
                   });
                 } else {
                   //直接跳转广告页
                   Navigator.of(context).pushNamedAndRemoveUntil(
-                      AppRoute.AD_PAGE, ModalRoute.withName(AppRoute.WELCOME_PAGE),
+                      AppRoute.AD_PAGE,
+                      ModalRoute.withName(AppRoute.WELCOME_PAGE),
                       arguments: {'path': path});
                 }
               });
             });
-          } else { //如果没有广告则直接跳转主页
-            Navigator.of(context).pushNamedAndRemoveUntil(AppRoute.HOME_PAGE, ModalRoute.withName(AppRoute.WELCOME_PAGE));
+          } else {
+            //如果没有广告则直接跳转主页
+            Navigator.of(context).pushNamedAndRemoveUntil(
+                AppRoute.HOME_PAGE, ModalRoute.withName(AppRoute.WELCOME_PAGE));
           }
         }
       });
