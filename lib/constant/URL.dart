@@ -235,7 +235,9 @@ class URL {
   static const String GET_LIMIT_CITY =
       "/iceberg/goods/order/app/getLimitArea"; //获取发货受限区域
 
-  static const String HOME_LABEL = "/iceberg/home/app/icon"; //首页icon列表
+  static const String HOME_ICON = "/iceberg/home/app/icon"; //首页icon列表
+
+  static const String HOME_LABEL = "/iceberg/home/app/homeLabel"; //首页标签列表
 
   static const String HOT_CITIES = "/iceberg/home/app/getHotCities"; //获取热门城市
 

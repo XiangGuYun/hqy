@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wobei/common/Global.dart';
 import 'package:wobei/constant/AppRoute.dart';
+import 'package:wobei/page/home/SearchPage.dart';
 import 'package:wobei/page/intro/ADPage.dart';
 import 'package:wobei/page/intro/WelcomePage.dart';
 import 'package:wobei/page/login/LoginPage.dart';
@@ -11,6 +13,7 @@ import 'page/ScaffoldPage.dart';
 void main() {
   //在调用runApp之前初始化绑定时，需要调用此方法。
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays([]);
   Global.init().then((e){
     runApp(MainApp());
   });
@@ -25,6 +28,7 @@ class MainApp extends StatelessWidget {
         ),
     AppRoute.HOME_PAGE: (context) => ScaffoldPage(),
     AppRoute.LOGIN: (context) => LoginPage(),
+    AppRoute.SEARCH_PAGE: (context) => SearchPage(),
   };
 
   @override
@@ -49,6 +53,7 @@ class MainApp extends StatelessWidget {
             return route;
           }
         }
+        return null;
       },
     );
   }

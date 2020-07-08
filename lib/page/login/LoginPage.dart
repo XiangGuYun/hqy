@@ -76,6 +76,7 @@ class _AppState extends State<App>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       //防止键盘顶起底部组件
       resizeToAvoidBottomPadding: false,

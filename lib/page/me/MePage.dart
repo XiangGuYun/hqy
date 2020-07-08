@@ -15,6 +15,7 @@ class _AppState extends State<MePage>
     with AutomaticKeepAliveClientMixin, BaseUtils {
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       body: Scaffold(
         backgroundColor: Colors.white,
@@ -297,7 +298,7 @@ class _AppState extends State<MePage>
                   ),
                   Positioned(
                     child: Image.asset(
-                      Config.DETAIL_HE_CARD,
+                      Config.DETAIL_HECARD,
                       width: 12,
                       height: 12,
                       fit: BoxFit.cover,

@@ -32,7 +32,6 @@ class _AppState extends State<App> {
   void initState() {
     super.initState();
     //隐藏状态栏
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     //判断是否需要跳转广告页
     var time1 = System.currentTimeMillis();
     //获取广告页数据

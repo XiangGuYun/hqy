@@ -1,73 +1,304 @@
+import 'dart:async';
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
+import 'package:frame_animate_widget/frame_animate_widget.dart';
+import 'package:provider/provider.dart';
+import 'package:pull_to_refresh/pull_to_refresh.dart';
 import 'package:wobei/bean/Banner.dart';
 import 'package:wobei/bean/BannerData.dart';
+import 'package:wobei/bean/HomeIcon.dart';
+import 'package:wobei/bean/HomeLabel.dart';
+import 'package:wobei/bean/Location.dart';
+import 'package:wobei/common/Global.dart';
 import 'package:wobei/common/OverScrollBehavior.dart';
+import 'package:wobei/constant/AppRoute.dart';
+import 'package:wobei/constant/Config.dart';
+import 'package:wobei/lesson/provider/ProviderTest.dart';
 import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
+import 'package:wobei/my_lib/utils/ToastUtils.dart';
+import 'package:wobei/plugin/AmapPlugin.dart';
+import 'package:wobei/widget/NetLoading.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
 ///*****************************************************************************
 /// 主页
 ///*****************************************************************************
-class HomePage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return App();
-  }
-}
-
-class App extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
 }
 
-class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin{
-  List<BannerData> bannerList = [];
+class _AppState extends State<HomePage>
+    with BaseUtils, AutomaticKeepAliveClientMixin {
+  List<BannerData> bannerList = [BannerData(url: '')];
+  List<Widget> homeIconList = [];
+  List<Widget> areaList = [];
+
+  var key = GlobalKey<FrameAnimationImageState>();
+  var keyRefresh = GlobalKey<FrameAnimationImageState>();
+  var loading = true;
+  Widget loadingAnim;
+  RefreshController _refreshController;
+
+  String userCity = '杭州';
 
   @override
-  void initState(){
+  void dispose() {
+    super.dispose();
+    keyRefresh.currentState.stopAnimation();
+  }
+
+  @override
+  void initState() {
     super.initState();
-    showStatusBar();
-    setStatusBarColor(true, Colors.transparent);
-    Req.getBannerInfo().then((response){
-      var banner = HbBanner.fromJson(response.data);
+    //千万不要在此执行，否则会出现第一次点击没反应的情况
+//    showStatusBar();
+//    setStatusBarColor(true, Colors.transparent);
+
+    loadingAnim = FrameAnimationImage(
+      key,
+      Global.netLoadingImgList,
+      width: 200,
+      height: 200,
+      interval: 20,
+      start: true,
+    );
+
+     _refreshController = RefreshController(initialRefresh: false);
+
+    AmapPlugin.startLocate((Location location) {
       setState(() {
-        bannerList.addAll(banner.data);
+        userCity = location.cityName.replaceAll('市', '');
+      });
+      Req.getHomeLabel(location.lat, location.lon, '').then((response) {
+        var homeLabel = HomeLabel.map(json.decode(response.toString()));
+        if (homeLabel.success) {
+          List<Widget> list = [];
+          homeLabel.data.asMap().forEach((i, data) {
+            list.add(Column(
+              children: <Widget>[
+                SizedBox(
+                  height: i == 0 ? 0 : 30,
+                ),
+                Row(
+                  children: <Widget>[
+                    Text(
+                      data.name,
+                      style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: "#ff393649".color()),
+                    ),
+                    SizedBox(
+                      width: 1,
+                    ).setExpanded(1),
+                    Text(
+                      "进入专区",
+                      style: TextStyle(
+                          fontSize: 12, color: "#ffa5a3ac".color()),
+                    )
+                  ],
+                ).setPadding1(left: 20, right: 20),
+                SizedBox(
+                  height: 16,
+                ),
+                Container(
+                  height: 121, //注意这里必须制定ListView高度，否则无法显示
+                  child: ListView.builder(
+                      physics: BouncingScrollPhysics(),
+                      scrollDirection: Axis.horizontal,
+                      itemCount: data.pageVO.results.length,
+//                      itemExtent: (context.getSrnW() - 52) / 2+20, //强制列表宽度
+                      itemBuilder: (BuildContext ctx, int index) {
+                        return Row(
+                          children: <Widget>[
+                            SizedBox(
+                              width: index == 0 ? 20 : 12,
+                            ),
+                            FadeInImage.assetNetwork(
+                              image: data.pageVO.results[index].logo,
+                              width: (ctx.getSrnW() - 52) / 2,
+                              height: 121,
+                              fit: BoxFit.cover,
+                              placeholder: Config.RIGHT_COVER,
+                              placeholderCacheHeight: 121,
+                              placeholderCacheWidth:
+                              (ctx.getSrnW() - 52) ~/ 2,
+                              fadeOutDuration: Duration(milliseconds: 50),
+                            ).setClipRRect(4.0),
+                            SizedBox(
+                              width: index == data.pageVO.results.length - 1
+                                  ? 20
+                                  : 0,
+                            ),
+                          ],
+                        );
+                      }),
+                )
+              ],
+            ));
+          });
+          setState(() {
+            //注意这里不要使用addAll
+            areaList = list;
+          });
+          loading = false;
+          //网络请求结束后，一定要停止动画
+          key.currentState.stopAnimation();
+        }
       });
     });
+
+    Req.getBannerInfo().then((response) {
+      var banner = HbBanner.fromJson(response.data);
+      setState(() {
+        bannerList = banner.data;
+      });
+    });
+
+    Req.getHomeIcon().then((response) {
+      var homeIcon = HomeIcon.fromJson(response.data);
+      setState(() {
+        List<Widget> list = [];
+        homeIcon.data.asMap().forEach((i, data) {
+          list.add(Row(
+            children: <Widget>[
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: <Widget>[
+                  FadeInImage.assetNetwork(
+                    placeholder: Config.ICON_COVER,
+                    image: data.iconImg,
+                    fit: BoxFit.cover,
+                    fadeOutDuration: Duration(milliseconds: 10),
+                    fadeInDuration: Duration(milliseconds: 300),
+                    width: 54.5,
+                    height: 34,
+                  ).setClipRRect(17),
+                  Text(
+                    data.name,
+                    style:
+                    TextStyle(fontSize: 12, color: "#ff393649".color()),
+                  ),
+                ],
+              ).setSizedBox(width: 54.5),
+              SizedBox(
+                width: i == homeIcon.data.length - 1
+                    ? 0
+                    : (context.getSrnW() -
+                    (54.5 * homeIcon.data.length) -
+                    40) /
+                    (homeIcon.data.length - 1),
+              ),
+            ],
+          ));
+        });
+        homeIconList.addAll(list);
+      });
+    });
+
+//    rootBundle.loadString('assets/json/province.json').then((value) {
+//      print('----------------------------------------');
+//      print(value.toString());
+//    });
+  }
+
+  ///下拉刷新
+  void _onRefresh() async {
+    //模拟网络请求
+    await Future.delayed(Duration(milliseconds: 1000));
+    //结束下拉
+    _refreshController.refreshCompleted();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Stack(
-        children: <Widget>[
-          ScrollConfiguration(
-            behavior: OverScrollBehavior(),
-            child: ListView(
-              children: <Widget>[
-//              SizedBox(height: 30,),
-                SizedBox(
-                  height: 18,
-                ),
-                getBanner().setPadding1(left: 20, right: 20), //轮播图
-                SizedBox(
-                  height: 20,
-                ),
-                getSubBar().setPadding1(left: 20, right: 20),
-                SizedBox(
-                  height: 20,
-                ),
-                getAreaList(),
-              ],
+    super.build(context);
+    return Stack(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 22),
+          child: ScrollConfiguration(
+            behavior: OverScrollBehavior(),//去除波浪
+            child: SmartRefresher(
+              enablePullDown: true,
+              enablePullUp: false,
+//              physics: BouncingScrollPhysics(),
+              onRefresh: _onRefresh,
+              header:
+              CustomHeader(builder: (BuildContext context, RefreshStatus mode) {
+                return Container(
+                  height: 100,
+                  child: Stack(
+                    children: <Widget>[
+                      Positioned(
+                        left: 100,
+                        right: 100,
+                        bottom: 0,
+                        child: FrameAnimationImage(
+                          keyRefresh,
+                          Global.frameList,
+                          width: 200,
+                          height: 30,
+                          interval: 20,
+                          start: true,
+                        ),
+                      )
+                    ],
+                  ),
+                );
+              }),
+              controller: _refreshController,
+              child: ListView.builder(
+                  itemCount: 7,
+                  itemBuilder: (ctx, index) {
+                    switch (index) {
+                      case 0:
+                        return SizedBox(
+                          height: 18,
+                        );
+                        break;
+                      case 1:
+                        return getBanner().setPadding1(left: 20, right: 20); //轮播图
+                        break;
+                      case 2:
+                        return SizedBox(
+                          height: 20,
+                        );
+                        break;
+                      case 3:
+                        return getSubBar().setPadding1(left: 20, right: 20);
+                        break;
+                      case 4:
+                        return SizedBox(
+                          height: 0,
+                        );
+                        break;
+                      case 5:
+                        return getAreaList();
+                        break;
+                      default:
+                        return SizedBox(height: 20,);
+                    }
+                  }),
+//          child: ScrollConfiguration(
+//            behavior: OverScrollBehavior(),//去除波浪
+//            child: ,
+//          ),
             ),
           ),
-          getTopBar().setColor(Colors.white).setPadding1(left: 20, right: 20), //顶部栏，包括搜索，定位
-        ],
-      ).setPadding1(top: 6 + getStatusBarHeight()),
-    );
+        ),
+        getTopBar().setColor(Colors.white).setPadding1(left: 20, right: 20),
+        //顶部栏，包括搜索，定位
+        Center(
+          child: loadingAnim,
+        ).setVisible2(loading)
+      ],
+    ).setPadding1(top: 6 + getStatusBarHeight());
   }
 
   ///***************************************************************************
@@ -86,7 +317,7 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
           width: 4,
         ),
         Text(
-          '杭州',
+          userCity,
           style: TextStyle(
               color: '#393649'.color(),
               fontSize: 16,
@@ -120,7 +351,9 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
               )
             ],
           ),
-        ).setExpanded(1)
+        ).setGestureDetector(onTap: () {
+          Navigator.of(context).pushNamed(AppRoute.SEARCH_PAGE);
+        }).setExpanded(1)
       ],
     ).setSize(double.infinity, 30);
   }
@@ -132,9 +365,18 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
     return Swiper(
       key: UniqueKey(),
       itemBuilder: (BuildContext context, int index) {
-        return Image.network(
-          bannerList[index].url,
+//        return Image.network(
+//          bannerList[index].url,
+//          fit: BoxFit.cover,
+//        );
+        return FadeInImage.assetNetwork(
+          placeholder: Config.BANNER_COVER,
+          image: bannerList[index].url==''?Config.BANNER_COVER:bannerList[index].url,
           fit: BoxFit.cover,
+          fadeOutDuration: Duration(milliseconds: 10),
+          fadeInDuration: Duration(milliseconds: 300),
+          width: context.getSrnW()-40,
+          height: 167.5,
         );
       },
       itemCount: bannerList.length,
@@ -190,151 +432,45 @@ class _AppState extends State<App> with BaseUtils, AutomaticKeepAliveClientMixin
   }
 
   ///***************************************************************************
-  /// 获取副标签栏 
+  /// 获取副标签栏
   ///***************************************************************************
   Widget getSubBar() {
-    return Row(
-      children: <Widget>[
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("assets/images/mall.png", width: 54.5, height: 34, fit: BoxFit.contain,),
-            Text('会员商城', style: TextStyle(fontSize: 12, color: "#ff393649".color()),),
-          ],
-        ),
-        SizedBox(width: 1,).setExpanded(1),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("assets/images/recharge.png", width: 54.5, height: 34, fit: BoxFit.contain,),
-            Text('话费充值', style: TextStyle(fontSize: 12, color: "#ff393649".color()),),
-          ],
-        ),
-        SizedBox(width: 1,).setExpanded(1),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("assets/images/exclusive.png", width: 54.5, height: 34, fit: BoxFit.contain,),
-            Text('禾卡专属', style: TextStyle(fontSize: 12, color: "#ff393649".color()),),
-          ],
-        ),
-        SizedBox(width: 1,).setExpanded(1),
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Image.asset("assets/images/mall.png", width: 54.5, height: 34, fit: BoxFit.contain,),
-            Text('热门生鲜', style: TextStyle(fontSize: 12, color: "#ff393649".color()),),
-          ],
-        ),
-      ],
-    );
-  }
-
-  String getTestImgUrl(int index) {
-    var imgUrl;
-    switch(index){
-      case 0:
-        imgUrl = "https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=1211338343,1056512950&fm=26&gp=0.jpg";
-        break;
-      case 1:
-        imgUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592479227896&di=fcf0311815dffc9738396298ae7c7ee3&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F05%2F16%2F08%2F1359b10f28667c2.jpg";
-        break;
-      case 2:
-        imgUrl = "https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592479227897&di=d1c35ab15275d2b39c510c005b706591&imgtype=0&src=http%3A%2F%2Fbpic.588ku.com%2Fback_pic%2F00%2F03%2F46%2F05561e73254317d.jpg";
-        break;
-    }
-    return imgUrl;
+    return Row(children: homeIconList)
+        .setSizedBox(height: 52, width: double.infinity);
   }
 
   ///***************************************************************************
   /// 获取专区列表
   ///***************************************************************************
   Widget getAreaList() {
-
-    final testImgUrl = 'https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1592480228176&di=a320b93fd8d94b5fd816770007454ff8&imgtype=0&src=http%3A%2F%2Fwx1.sinaimg.cn%2Fcrop.85.0.640.360.1000%2F44c65225gy1flwshea7ytj20m80a0wfp.jpg';
-
     return ListView(
-      shrinkWrap: true,//解决无限高度问题
-      physics: NeverScrollableScrollPhysics(),//禁用滑动事件
-      children: <Widget>[
-        Row(
-          children: <Widget>[
-            Text('福利专区', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: "#ff393649".color()),),
-            SizedBox(width: 1,).setExpanded(1),
-            Text("进入专区", style: TextStyle(fontSize: 12, color: "#ffa5a3ac".color()),)
-          ],
-        ).setPadding1(left: 20, right: 20),
-        SizedBox(height: 16,),
-        ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            SizedBox(width: 20,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-          ],
-        ).setSizedBox(width: double.infinity, height: 121),
-
-        SizedBox(height: 20,),
-        Row(
-          children: <Widget>[
-            Text('福利专区', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: "#ff393649".color()),),
-            SizedBox(width: 1,).setExpanded(1),
-            Text("进入专区", style: TextStyle(fontSize: 12, color: "#ffa5a3ac".color()),)
-          ],
-        ).setPadding1(left: 20, right: 20),
-        SizedBox(height: 16,),
-        ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            SizedBox(width: 20,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-          ],
-        ).setSizedBox(width: double.infinity, height: 121),
-
-        SizedBox(height: 20,),
-        Row(
-          children: <Widget>[
-            Text('福利专区', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: "#ff393649".color()),),
-            SizedBox(width: 1,).setExpanded(1),
-            Text("进入专区", style: TextStyle(fontSize: 12, color: "#ffa5a3ac".color()),)
-          ],
-        ).setPadding1(left: 20, right: 20),
-        SizedBox(height: 16,),
-        ListView(
-          scrollDirection: Axis.horizontal,
-          children: <Widget>[
-            SizedBox(width: 20,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-            Image.network(testImgUrl, width: (context.getSrnW()-52)/2, height: 121, fit: BoxFit.cover,).setClipRRect(4.0),
-            SizedBox(width: 12,),
-          ],
-        ).setSizedBox(width: double.infinity, height: 121),
-      ],
+      shrinkWrap: true, //解决无限高度问题
+      physics: NeverScrollableScrollPhysics(), //禁用滑动事件
+      children: areaList,
     );
+  }
+
+  List<Widget> getRightList(List<Results> results) {
+    List<Widget> list = [];
+    results.asMap().forEach((i, item) {
+      list.add(Row(
+        children: <Widget>[
+          SizedBox(
+            width: i == 0 ? 20 : 12,
+          ),
+          Image.network(
+            item.logo,
+            width: (context.getSrnW() - 52) / 2,
+            height: 121,
+            fit: BoxFit.cover,
+          ).setClipRRect(4.0),
+          SizedBox(
+            width: i == results.length - 1 ? 20 : 0,
+          ),
+        ],
+      ));
+    });
+    return list;
   }
 
   @override

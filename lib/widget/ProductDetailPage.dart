@@ -87,7 +87,7 @@ class _ProductDetailPageState extends State<ProductDetailPage> with BaseUtils {
                     ),
                     Container(
                       child: Image.asset(
-                        Config.HE_CARD_PRICE,
+                        Config.HECARD_PRICE,
                         width: 26,
                         height: 12,
                         fit: BoxFit.cover,

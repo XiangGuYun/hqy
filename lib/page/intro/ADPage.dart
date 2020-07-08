@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wobei/common/Global.dart';
 import 'package:wobei/constant/AppRoute.dart';
+import 'package:wobei/lesson/provider/ProviderTest.dart';
+import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/StorageUtils.dart';
 import '../../constant/Config.dart';
 import '../../my_lib/extension/BaseExtension.dart';
@@ -32,7 +34,7 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState(imgUrl: imgUrl);
 }
 
-class _AppState extends State<App> {
+class _AppState extends State<App> with BaseUtils{
   final String imgUrl;
 
   _AppState({this.imgUrl});
@@ -44,7 +46,6 @@ class _AppState extends State<App> {
   @override
   void initState(){
     super.initState();
-
     imgFile = File(Global.prefs.get(Config.TEMP_PATH).toString()+"/ad.jpg");
     Timer.periodic(1.seconds(), (t) {
       setState(() {

@@ -6,12 +6,12 @@ import 'package:flutter/services.dart';
 class BaseUtils {
   ///显示状态栏
   void showStatusBar() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.top]);
+    SystemChrome.setEnabledSystemUIOverlays([]);
   }
 
   ///隐藏状态栏
   void hideStatusBar() {
-    SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
+    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
   }
 
   ///获取状态栏高度

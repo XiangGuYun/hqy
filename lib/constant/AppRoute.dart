@@ -8,4 +8,6 @@ class AppRoute{
   static const String HOME_PAGE = "/page_home";
   //登录
   static const String LOGIN = "/page_login";
+  //搜索页
+  static const String SEARCH_PAGE = '/page_search';
 }

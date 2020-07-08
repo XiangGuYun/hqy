@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:wobei/lesson/frame_anim/FrameAnimPage.dart';
+import 'package:wobei/lesson/plugin_dev/PluginDevPage.dart';
+import 'package:wobei/lesson/provider/ProviderTest.dart';
+import 'package:wobei/lesson/pull_to_refresh/PullToRefreshPage.dart';
 import 'package:wobei/page/me/MePage.dart';
 import 'package:wobei/page/order/ShippingAddressPage.dart';
 import 'package:wobei/widget/TabPager.dart';
@@ -14,7 +18,7 @@ class TestApp extends StatelessWidget {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(),
-        home: MePage());
+        home: HomePage());
   }
 }
 

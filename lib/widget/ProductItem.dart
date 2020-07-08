@@ -98,7 +98,7 @@ class _ProductItemState extends State<ProductItem> with BaseUtils {
                       style: TextStyle(fontSize: 14, color: Color(0xFFB3926F), fontFamily: 'money'))
                 ])),
                 SizedBox(width: 4.5,),
-                Image.asset(Config.HE_CARD_PRICE, width: 22, height: 10, fit: BoxFit.cover,),
+                Image.asset(Config.HECARD_PRICE, width: 22, height: 10, fit: BoxFit.cover,),
                 SizedBox(width: 11.5,),
                 Text('¥${widget.originPrice}', style: TextStyle(fontSize: 14, color: Color(0xffa5a3ac), fontFamily: 'money'),)
               ],

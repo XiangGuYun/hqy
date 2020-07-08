@@ -39,12 +39,18 @@ class EditText extends StatefulWidget {
   ///键盘动作按钮
   final TextInputAction action;
 
+  ///外边距
+  final EdgeInsets margin;
+
+  ///内边距
+  final EdgeInsets padding;
+
   ///最大行数
   final int maxLines;
 
   EditText(this.width,
       {Key key,
-      this.height = 50,
+      this.height = 36,
       this.textSize = 14.0,
       this.hint,
       this.maxLength = 20,
@@ -55,6 +61,8 @@ class EditText extends StatefulWidget {
       this.hintColor = const Color(0xFFC9C8CD),
       this.text = '',
       this.textColor = const Color(0xFF393649),
+      this.margin = const EdgeInsets.all(0),
+      this.padding = const EdgeInsets.all(0),
       this.maxLines = 1})
       : super(key: key);
 
@@ -68,6 +76,8 @@ class _EditTextState extends State<EditText> {
     return Container(
       width: widget.width,
       height: widget.height,
+      margin: widget.margin,
+      padding: widget.padding,
       child: TextField(
         textInputAction: widget.action,
         keyboardType: widget.inputType,
@@ -79,6 +89,7 @@ class _EditTextState extends State<EditText> {
         ],
         cursorColor: Colors.black,
         maxLines: widget.maxLines,
+        textAlign: TextAlign.left,
         //装饰
         decoration: InputDecoration(
             //设置提示文字
