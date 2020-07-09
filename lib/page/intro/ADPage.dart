@@ -11,48 +11,34 @@ import 'package:wobei/my_lib/utils/StorageUtils.dart';
 import '../../constant/Config.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
-///广告页
-class ADPage extends StatelessWidget {
-  final arguments;
-
-  ADPage({this.arguments});
-
+/// ***************************************************************************
+/// 广告页
+/// ***************************************************************************
+class ADPage extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return App(
-      imgUrl: arguments['url'].toString(),
-    );
-  }
+  _AppState createState() => _AppState();
 }
 
-class App extends StatefulWidget {
-  final String imgUrl;
+class _AppState extends State<ADPage> with BaseUtils{
 
-  App({this.imgUrl});
-
-  @override
-  _AppState createState() => _AppState(imgUrl: imgUrl);
-}
-
-class _AppState extends State<App> with BaseUtils{
-  final String imgUrl;
-
-  _AppState({this.imgUrl});
-
-  var number = 4;
+  /// 广告倒计时秒数
+  var number = 3;
+  /// 用于防止手动跳过广告后后再次执行自动跳过广告的标志位
   var needPush = true;
+  /// 广告图
   var imgFile;
 
   @override
   void initState(){
     super.initState();
-    imgFile = File(Global.prefs.get(Config.TEMP_PATH).toString()+"/ad.jpg");
-    Timer.periodic(1.seconds(), (t) {
+    imgFile = File(Global.cacheDir+"/ad.jpg");
+    /// 执行倒计时任务
+    Timer.periodic(1.seconds(), (task) {
       setState(() {
         number--;
       });
       if (number == 0 && needPush) {
-        t.cancel();
+        task.cancel();
         Navigator.of(context).pushNamedAndRemoveUntil(AppRoute.HOME_PAGE, ModalRoute.withName(AppRoute.AD_PAGE));
       }
     });

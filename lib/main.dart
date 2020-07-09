@@ -13,7 +13,6 @@ import 'page/ScaffoldPage.dart';
 void main() {
   //在调用runApp之前初始化绑定时，需要调用此方法。
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays([]);
   Global.init().then((e){
     runApp(MainApp());
   });
@@ -24,7 +23,7 @@ class MainApp extends StatelessWidget {
     //配置路由
     AppRoute.WELCOME_PAGE: (context) => WelcomePage(),
     AppRoute.AD_PAGE: (context, {arguments}) => ADPage(
-          arguments: arguments,
+//          arguments: arguments,
         ),
     AppRoute.HOME_PAGE: (context) => ScaffoldPage(),
     AppRoute.LOGIN: (context) => LoginPage(),

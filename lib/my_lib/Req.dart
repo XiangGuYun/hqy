@@ -6,11 +6,6 @@ import 'package:wobei/my_lib/utils/NetUtils.dart';
 
 ///管理所有的接口请求
 class Req {
-  ///获取广告页
-  static void getADInfo() {
-    NetUtils.post(URL.GUANG_GAO_YE_HUO_QU_TU_PIAN_DI_ZHI, Map()..['port'] = '1',
-        (code, msg, success, data) {});
-  }
 
   ///登录
   static void login(
@@ -67,6 +62,13 @@ class Req {
     return  await NetUtils.post2(URL.HOME_LABEL, params);
   }
 
+  ///获取广告信息
+  static Future<Response> getAdInfo(Function callback){
+    NetUtils.post(URL.GUANG_GAO_YE_HUO_QU_TU_PIAN_DI_ZHI, Map()..['port'] = '1',
+            (code, msg, success, data) {
+              callback(success, data);
+        });
+  }
 
 
 

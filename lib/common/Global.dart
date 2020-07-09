@@ -5,37 +5,42 @@ import 'package:frame_animate_widget/frame_animate_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/my_lib/utils/AppUtils.dart';
+import 'package:wobei/my_lib/utils/PathUtils.dart';
 
+/// ***************************************************************************
+/// 全局类
+/// 预获取或保存一些全局数据
+/// ***************************************************************************
 class Global {
 
+  /// 共享配置
   static SharedPreferences prefs;
 
-  // 是否为release版
+  /// 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
+  /// 设备ID
   static String deviceId;
 
+  ///缓存目录
+  static String cacheDir;
+
+  /// 网络加载帧动画图片列表
   static List<String> netLoadingImgList;
+
+  /// 下拉刷新动画图片列表
   static List<String> frameList;
 
-//  final GlobalKey<FrameAnimationImageState> key = GlobalKey<FrameAnimationImageState>();
-
-  static Widget getNetLoading(key){
-    return FrameAnimationImage(
-      key,
-      netLoadingImgList,
-      width: 200,
-      height: 200,
-      interval: 20,
-      start: true,
-    );
-  }
-
-  //初始化全局信息，会在APP启动时执行
+  /// 初始化全局信息，会在APP启动时执行
   static Future init() async {
     prefs = await SharedPreferences.getInstance();
+
     AppUtils.getDeviceId((id){
       deviceId = id;
+    });
+
+    PathUtils.getTempPath().then((path) {
+      cacheDir = path;
     });
 
     frameList = [

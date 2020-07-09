@@ -10,7 +10,16 @@ extension ObjectEx on Object {
 ///字符串扩展
 extension StringEx on String {
   Text getText() => Text(this);
-  
+
+  /// 设置字符串的最大长度，超出则用...表示
+  String maxLength(int length){
+    if(this.length <= length){
+      return this;
+    } else {
+      return '${this.substring(0, 10)}...';
+    }
+  }
+
   Color color(){
     if(this.length==7){
       var red = BaseUtils.hexToInt(this.substring(1, 3));

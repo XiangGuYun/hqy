@@ -1,53 +1,40 @@
-import 'dart:convert';
+import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_swiper/flutter_swiper.dart';
-import 'package:frame_animate_widget/frame_animate_widget.dart';
-import 'package:wobei/bean/Banner.dart';
-import 'package:wobei/bean/BannerData.dart';
-import 'package:wobei/bean/HomeIcon.dart';
-import 'package:wobei/bean/HomeLabel.dart';
-import 'package:wobei/bean/Location.dart';
-import 'package:wobei/common/Global.dart';
-import 'package:wobei/common/OverScrollBehavior.dart';
-import 'package:wobei/constant/AppRoute.dart';
 import 'package:wobei/constant/Config.dart';
-import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/System.dart';
-import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/page/home/HomePage.dart';
 import 'package:wobei/page/login/LoginPage.dart';
 import 'package:wobei/page/me/MePage.dart';
-import 'package:wobei/plugin/AmapPlugin.dart';
 
 import '../my_lib/extension/BaseExtension.dart';
 
-///主页
+/// ***************************************************************************
+/// App脚手架页面
+/// 作用类似与Android中托管多个Fragment的Activity
+/// ***************************************************************************
 class ScaffoldPage extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
 }
 
 class _AppState extends State<ScaffoldPage> with BaseUtils {
-  //子页面
+  /// 子页面
   var navigationBarHeight = 48.0;
-  var currentIndex = 0; //当前页面的索引值
-  PageController _pageController;
-  var pages;
 
-  List<BannerData> bannerList = [];
-  List<Widget> homeIconList = [];
-  List<Widget> areaList = [];
+  /// 当前页面的索引值
+  var currentIndex = 0;
+
+  /// 翻页控制器
+  PageController _pageController;
 
   @override
   void initState() {
     super.initState();
-    SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-//    setStatusBarColor(true, Colors.transparent);
+    hideStatusBar();
+    setStatusBarColor(true, Colors.transparent);
     _pageController = PageController(initialPage: 0, keepPage: true);
-    pages = [HomePage(), MePage(), LoginPage()];
   }
 
   @override
@@ -70,13 +57,13 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                 itemBuilder: (context, index) {
                   switch (index) {
                     case 0:
-                      return pages[0];
+                      return HomePage();
                       break;
                     case 1:
-                      return pages[1];
+                      return MePage();
                       break;
                     default:
-                      return pages[2];
+                      return LoginPage();
                   }
                 }).setExpanded(1),
             Divider(
@@ -91,9 +78,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                   height: navigationBarHeight,
                   alignment: Alignment.center,
                   child: Image.asset(
-                    currentIndex == 0
-                        ? 'assets/images/home_active.png'
-                        : 'assets/images/home_normal.png',
+                    currentIndex == 0 ? Config.HOME_ACTIVE : Config.HOME_NORMAL,
                     width: 40,
                     height: 40,
                   ),
@@ -111,8 +96,8 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                       alignment: Alignment.center,
                       child: Image.asset(
                         currentIndex == 1
-                            ? 'assets/images/right_active.png'
-                            : 'assets/images/right_normal.png',
+                            ? Config.RIGHT_ACTIVE
+                            : Config.RIGHT_NORMAL,
                         width: 40,
                         height: 40,
                       ),
@@ -131,8 +116,8 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                   alignment: Alignment.center,
                   child: Image.asset(
                     currentIndex == 2
-                        ? 'assets/images/myself_active.png'
-                        : 'assets/images/myself_normal.png',
+                        ? Config.MYSELF_ACTIVE
+                        : Config.MYSELF_NORMAL,
                     width: 40,
                     height: 40,
                   ),
@@ -152,13 +137,15 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
 
   var exitTime = 0;
 
-  Future<bool> _requestPop() {
+  /// 连续双击退出应用
+  Future<bool> _requestPop() async {
     if (System.currentTimeMillis() - exitTime > 2000) {
       "再按一次退出应用".toast();
       exitTime = System.currentTimeMillis();
+      return false;
     } else {
       System.exit();
+      return true;
     }
   }
-
 }
