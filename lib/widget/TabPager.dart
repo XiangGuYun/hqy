@@ -1,10 +1,7 @@
-import 'package:date_format/date_format.dart';
-import 'package:flashy_tab_bar/flashy_tab_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/widget/MyIndicator.dart';
 import 'package:wobei/widget/MyTab.dart';
-import '../my_lib/extension/BaseExtension.dart';
 
 class MyApp extends StatefulWidget {
   @override

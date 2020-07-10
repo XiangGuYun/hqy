@@ -18,16 +18,19 @@ void main() {
   });
 }
 
+///*****************************************************************************
+///
+/// 基层页面
+///
+///*****************************************************************************
 class MainApp extends StatelessWidget {
+  //配置路由
   var routes = {
-    //配置路由
     AppRoute.WELCOME_PAGE: (context) => WelcomePage(),
-    AppRoute.AD_PAGE: (context, {arguments}) => ADPage(
-//          arguments: arguments,
-        ),
+    AppRoute.AD_PAGE: (context, {arguments}) => ADPage(),
     AppRoute.HOME_PAGE: (context) => ScaffoldPage(),
     AppRoute.LOGIN: (context) => LoginPage(),
-    AppRoute.SEARCH_PAGE: (context) => SearchPage(),
+    AppRoute.SEARCH_PAGE: (context, recommendWords) => SearchPage(recommendWords: recommendWords,),
   };
 
   @override

@@ -11,9 +11,11 @@ import 'package:wobei/my_lib/utils/StorageUtils.dart';
 import '../../constant/Config.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
-/// ***************************************************************************
+/// ****************************************************************************
+///
 /// 广告页
-/// ***************************************************************************
+///
+/// ****************************************************************************
 class ADPage extends StatefulWidget {
   @override
   _AppState createState() => _AppState();

@@ -1,39 +1,37 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:wobei/bean/SearchWord.dart';
 import 'package:wobei/constant/Config.dart';
+import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/widget/EditText.dart';
 import 'package:wobei/widget/MyWidget.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
-///搜索页
+///*****************************************************************************
+///
+/// 搜索页
+///
+///*****************************************************************************
 class SearchPage extends StatefulWidget {
+
+  final List<String> recommendWords;
+
+  SearchPage({this.recommendWords});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> with BaseUtils {
-
-  List<Widget> list = null;
+  /// 搜索推荐词列表
+  List<String> wordList;
 
   @override
   void initState() {
     super.initState();
-    list = ['咪咕', '喜马拉雅', '外卖', '演唱会', '整容', '超长字符紫薯布丁紫薯布丁'].map((s){
-      return Container(
-        decoration: BoxDecoration(
-            color: Color(0xfff5f7fa),
-            borderRadius: BorderRadius.all(Radius.circular(4))
-        ),
-        padding: EdgeInsets.only(left: 16, right: 16, top: 6, bottom: 6),
-        child: Text(s, style: TextStyle(fontSize: 14, color: Color(0xff909399)),).setGestureDetector(
-          onTap: (){
-            ToastUtils.show(s);
-          }
-        ),
-      );
-    }).toList();
+    wordList = widget.recommendWords;
   }
 
   @override
@@ -107,7 +105,20 @@ class _SearchPageState extends State<SearchPage> with BaseUtils {
           Wrap(
             spacing: 12,
             runSpacing: 12,
-            children: list,
+            children: wordList.map((s){
+              return Container(
+                decoration: BoxDecoration(
+                    color: Color(0xfff5f7fa),
+                    borderRadius: BorderRadius.all(Radius.circular(4))
+                ),
+                padding: EdgeInsets.only(left: 16, right: 16, top: 6, bottom: 6),
+                child: Text(s, style: TextStyle(fontSize: 14, color: Color(0xff909399)),).setGestureDetector(
+                    onTap: (){
+                      ToastUtils.show(s);
+                    }
+                ),
+              );
+            }).toList(),
           ).setMargin1(left: 20)
         ],
       ),

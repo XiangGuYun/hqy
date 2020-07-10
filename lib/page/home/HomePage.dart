@@ -10,6 +10,7 @@ import 'package:wobei/bean/BannerData.dart';
 import 'package:wobei/bean/HomeIcon.dart';
 import 'package:wobei/bean/HomeLabel.dart';
 import 'package:wobei/bean/Location.dart';
+import 'package:wobei/bean/SearchWord.dart';
 import 'package:wobei/common/Global.dart';
 import 'package:wobei/common/OverScrollBehavior.dart';
 import 'package:wobei/constant/AppRoute.dart';
@@ -17,11 +18,14 @@ import 'package:wobei/constant/Config.dart';
 import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/plugin/AmapPlugin.dart';
+import 'package:wobei/widget/VipPriceText.dart';
 
 import '../../my_lib/extension/BaseExtension.dart';
 
 ///*****************************************************************************
+///
 /// 主页
+///
 ///*****************************************************************************
 class HomePage extends StatefulWidget {
   @override
@@ -60,6 +64,15 @@ class _AppState extends State<HomePage>
   /// 用户所处城市，默认是杭州
   String userCity = '杭州';
 
+  /// 建议搜索词
+  String textSuggestSearch = '';
+
+  /// 推荐搜索词，需要传给搜索页显示
+  List<String> recommendWords = [];
+
+  ///===========================================================================
+  /// 当页面销毁时
+  ///===========================================================================
   @override
   void dispose() {
     super.dispose();
@@ -67,27 +80,27 @@ class _AppState extends State<HomePage>
     keyRefresh.currentState.stopAnimation();
   }
 
+  ///===========================================================================
+  /// 当页面初始时
+  ///===========================================================================
   @override
   void initState() {
     super.initState();
-
     init();
-
     doLocateAndRenderAreaList();
-
     renderBanner();
-
     renderHomeIcon();
+    Req.getKeyword((SearchWord data){
+      setState(() {
+        textSuggestSearch = data.suggestWord;
+        recommendWords = data.recommendWords;
+      });
+    });
   }
 
-  ///下拉刷新
-  void _onRefresh() async {
-    //模拟网络请求
-    await Future.delayed(Duration(milliseconds: 1000));
-    //结束下拉
-    _refreshController.refreshCompleted();
-  }
-
+  ///===========================================================================
+  /// 当页面构建时
+  ///===========================================================================
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -172,9 +185,19 @@ class _AppState extends State<HomePage>
     ).setPadding1(top: 6 + getStatusBarHeight());
   }
 
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
+  /// 下拉刷新
+  ///---------------------------------------------------------------------------
+  void _onRefresh() async {
+    //模拟网络请求
+    await Future.delayed(Duration(milliseconds: 1000));
+    //结束下拉
+    _refreshController.refreshCompleted();
+  }
+
+  ///---------------------------------------------------------------------------
   /// 设置顶部栏
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   Widget getTopBar() {
     return Row(
       children: <Widget>[
@@ -217,21 +240,21 @@ class _AppState extends State<HomePage>
                 width: 8,
               ),
               Text(
-                '爱奇艺VIP月卡',
+                textSuggestSearch,
                 style: TextStyle(color: '#A5A3AC'.color(), fontSize: 12),
               )
             ],
           ),
         ).setGestureDetector(onTap: () {
-          Navigator.of(context).pushNamed(AppRoute.SEARCH_PAGE);
+          Navigator.of(context).pushNamed(AppRoute.SEARCH_PAGE, arguments: recommendWords);
         }).setExpanded(1)
       ],
     ).setSize(double.infinity, 30);
   }
 
-  ///****************************************************************************
+  ///---------------------------------------------------------------------------
   /// 设置轮播图
-  ///****************************************************************************
+  ///---------------------------------------------------------------------------
   Widget getBanner() {
     return Swiper(
       key: UniqueKey(),
@@ -298,17 +321,17 @@ class _AppState extends State<HomePage>
     ).setClipRRect(4).setSizedBox(width: double.infinity, height: 167.5);
   }
 
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   /// 获取副标签栏
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   Widget getSubBar() {
     return Row(children: homeIconList)
         .setSizedBox(height: 52, width: double.infinity);
   }
 
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   /// 获取专区列表
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   Widget getAreaList() {
     return ListView(
       shrinkWrap: true, //解决无限高度问题
@@ -317,9 +340,9 @@ class _AppState extends State<HomePage>
     );
   }
 
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   /// 获取专区列表中的权益列表
-  ///***************************************************************************
+  ///---------------------------------------------------------------------------
   List<Widget> getRightList(List<Results> results) {
     List<Widget> list = [];
     results.asMap().forEach((i, item) {
@@ -343,10 +366,15 @@ class _AppState extends State<HomePage>
     return list;
   }
 
+  ///===========================================================================
+  /// 保持页面状态
+  ///===========================================================================
   @override
   bool get wantKeepAlive => true;
 
+  ///---------------------------------------------------------------------------
   /// 定位并渲染专区列表
+  ///---------------------------------------------------------------------------
   void doLocateAndRenderAreaList() {
     AmapPlugin.startLocate((Location location) {
       setState(() {
@@ -438,7 +466,9 @@ class _AppState extends State<HomePage>
     });
   }
 
+  ///---------------------------------------------------------------------------
   /// 渲染轮播图
+  ///---------------------------------------------------------------------------
   void renderBanner() {
     Req.getBannerInfo().then((response) {
       var banner = HbBanner.fromJson(response.data);
@@ -448,7 +478,9 @@ class _AppState extends State<HomePage>
     });
   }
 
+  ///---------------------------------------------------------------------------
   /// 渲染首页标签
+  ///---------------------------------------------------------------------------
   void renderHomeIcon() {
     Req.getHomeIcon().then((response) {
       var homeIcon = HomeIcon.fromJson(response.data);
@@ -489,7 +521,9 @@ class _AppState extends State<HomePage>
     });
   }
 
+  ///---------------------------------------------------------------------------
   /// 初始化对象
+  ///---------------------------------------------------------------------------
   void init() {
     loadingAnim = FrameAnimationImage(
       keyLoading,
@@ -503,7 +537,9 @@ class _AppState extends State<HomePage>
     _refreshController = RefreshController(initialRefresh: false);
   }
 
+  ///---------------------------------------------------------------------------
   /// 获取专区列表项的名称、价格等信息
+  ///---------------------------------------------------------------------------
   Widget getAreaListItem(Results result, bool isFirst) {
     /*
     vipType	integer($int32) 禾卡价格 0未知 1有 2无
@@ -579,9 +615,20 @@ class _AppState extends State<HomePage>
                   result.name,
                   style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
                 ),
-                Text(
-                  '免费领',
-                  style: TextStyle(fontSize: 12, color: Config.RED_B3926F),
+                Row(
+                  children: <Widget>[
+                    VipPriceText(
+                      price: result.vipPrice.toString(),
+                    ),
+                    Text(
+                      '¥ ${result.price}',
+                      style: TextStyle(
+                        fontSize: 14, color: Config.GREY_C0C4CC,
+                        decoration: TextDecoration.lineThrough, //删除线
+                        decorationColor: Config.GREY_C0C4CC,
+                      ),
+                    ),
+                  ],
                 )
               ],
             );

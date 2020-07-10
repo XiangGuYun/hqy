@@ -17,9 +17,11 @@ import 'package:wobei/my_lib/utils/NetUtils.dart';
 import 'package:wobei/my_lib/utils/StorageUtils.dart';
 import 'package:wobei/my_lib/utils/System.dart';
 
-/// ***************************************************************************
+///*****************************************************************************
+///
 /// 启动页
-/// ***************************************************************************
+///
+///*****************************************************************************
 class WelcomePage extends StatefulWidget {
   @override
   _AppState createState() => _AppState();
@@ -46,7 +48,9 @@ class _AppState extends State<WelcomePage> with BaseUtils {
     ));
   }
 
-  ///获取广告页数据
+  /// --------------------------------------------------------------------------
+  /// 获取广告页数据
+  /// --------------------------------------------------------------------------
   void _reqAdData() {
     var time1 = System.currentTimeMillis();
     Req.getAdInfo((success, data) {
@@ -60,7 +64,9 @@ class _AppState extends State<WelcomePage> with BaseUtils {
     });
   }
 
-  ///处理广告接口数据
+  /// --------------------------------------------------------------------------
+  /// 处理广告接口数据
+  /// --------------------------------------------------------------------------
   void doData(_data) {
     if (_data.isHave) {
       //如果有广告

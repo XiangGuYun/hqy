@@ -12,7 +12,11 @@ import 'package:wobei/my_lib/utils/SPUtils.dart';
 
 import '../../my_lib/extension/BaseExtension.dart';
 
-///登录页
+///*****************************************************************************
+///
+/// 登录页
+///
+///*****************************************************************************
 class LoginPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -25,14 +29,22 @@ class App extends StatefulWidget {
   _AppState createState() => _AppState();
 }
 
+///*****************************************************************************
+///
+/// 登录视图类型
+///
+///*****************************************************************************
 enum ViewType {
+  /// 密码登录
   PASSWORD_LOGIN,
+
+  /// 验证码登录
   VERIFICATION_CODE_LOGIN,
 }
 
 class _AppState extends State<App>
     with BaseUtils, AutomaticKeepAliveClientMixin {
-  ///登录类型
+  /// 登录类型
   var viewType = ViewType.VERIFICATION_CODE_LOGIN;
 
   ///登录按钮颜色
@@ -83,8 +95,7 @@ class _AppState extends State<App>
       body: Container(
         width: double.infinity,
         height: double.infinity,
-        padding:
-            EdgeInsets.only(top: getStatusBarHeight()),
+        padding: EdgeInsets.only(top: getStatusBarHeight()),
         child: Stack(
           children: <Widget>[
             Column(
@@ -126,7 +137,12 @@ class _AppState extends State<App>
               ],
             ).setPadding1(left: 40, right: 40),
             Container(
-              child: Image.asset(Config.CLOSE, width: 24, height: 24, fit: BoxFit.cover,),
+              child: Image.asset(
+                Config.CLOSE,
+                width: 24,
+                height: 24,
+                fit: BoxFit.cover,
+              ),
               margin: EdgeInsets.only(left: 20, top: 10),
             )
           ],
@@ -135,6 +151,9 @@ class _AppState extends State<App>
     );
   }
 
+  ///---------------------------------------------------------------------------
+  /// 获取输入视图(密码或验证码)
+  ///---------------------------------------------------------------------------
   Widget getInputArea() {
     if (viewType == ViewType.VERIFICATION_CODE_LOGIN) {
       return Column(
@@ -155,7 +174,7 @@ class _AppState extends State<App>
                   if (valuePassword.toString().length >= 6 &&
                       valuePhoneNumber.toString().length == 11) {
                     setState(() {
-                      buttonColor = Config.BTN_ENABLE_TRUE;
+                      buttonColor = Config.BLACK_303133;
                     });
                   } else {
                     setState(() {
@@ -197,7 +216,7 @@ class _AppState extends State<App>
                       if (valuePassword.toString().length >= 6 &&
                           valuePhoneNumber.toString().length == 11) {
                         setState(() {
-                          buttonColor = Config.BTN_ENABLE_TRUE;
+                          buttonColor = Config.BLACK_303133;
                         });
                       } else {
                         setState(() {
@@ -207,7 +226,8 @@ class _AppState extends State<App>
                     },
                     obscureText: true,
                     inputFormatters: [
-                      LengthLimitingTextInputFormatter(maxLengthOfSecondTextField),
+                      LengthLimitingTextInputFormatter(
+                          maxLengthOfSecondTextField),
                     ],
                     cursorColor: Colors.black,
                     //装饰
@@ -266,10 +286,10 @@ class _AppState extends State<App>
             });
           }, onTapUp: (details) {
             setState(() {
-              buttonColor = Config.BTN_ENABLE_TRUE;
+              buttonColor = Config.BLACK_303133;
             });
           }, onTap: () {
-            if (buttonColor != Config.BTN_ENABLE_TRUE) return;
+            if (buttonColor != Config.BLACK_303133) return;
             Req.login(isPasswordLogin, valuePhoneNumber, valuePassword,
                 valueVerificationCode, (data) {
               if (data.token != '-1') {
@@ -321,6 +341,9 @@ class _AppState extends State<App>
     }
   }
 
+  ///---------------------------------------------------------------------------
+  /// 执行可再次获取验证码的倒计时
+  ///---------------------------------------------------------------------------
   void startCountDown() {
     Timer.periodic(Duration(seconds: 1), (task) {});
   }

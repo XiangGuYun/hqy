@@ -1,17 +1,24 @@
 part of base_extension;
 
+///*****************************************************************************
 ///对象扩展
+///*****************************************************************************
 extension ObjectEx on Object {
+  ///---------------------------------------------------------------------------
+  /// 打印输出
+  ///---------------------------------------------------------------------------
   void pln() {
     print(this);
   }
 }
 
+///*****************************************************************************
 ///字符串扩展
+///*****************************************************************************
 extension StringEx on String {
-  Text getText() => Text(this);
-
+  ///---------------------------------------------------------------------------
   /// 设置字符串的最大长度，超出则用...表示
+  ///---------------------------------------------------------------------------
   String maxLength(int length){
     if(this.length <= length){
       return this;
@@ -20,6 +27,9 @@ extension StringEx on String {
     }
   }
 
+  ///---------------------------------------------------------------------------
+  /// 将"#FFFFFF"或"#FFFFFFFF"格式的颜色字符串转为Color对象
+  ///---------------------------------------------------------------------------
   Color color(){
     if(this.length==7){
       var red = BaseUtils.hexToInt(this.substring(1, 3));
@@ -36,60 +46,9 @@ extension StringEx on String {
     }
   }
 
-  Text getStyleText({
-    inherit = true,
-    color,
-    backgroundColor,
-    fontSize,
-    fontWeight,
-    fontStyle,
-    letterSpacing,
-    wordSpacing,
-    textBaseline,
-    height,
-    locale,
-    foreground,
-    background,
-    shadows,
-    fontFeatures,
-    decoration,
-    decorationColor,
-    decorationStyle,
-    decorationThickness,
-    debugLabel,
-    String fontFamily,
-    List<String> fontFamilyFallback,
-    String package,
-  }) {
-    return Text(
-      this,
-      style: TextStyle(
-          inherit: inherit,
-          color: color,
-          backgroundColor: backgroundColor,
-          fontSize: fontSize,
-          fontWeight: fontWeight,
-          fontStyle: fontStyle,
-          letterSpacing: letterSpacing,
-          wordSpacing: wordSpacing,
-          textBaseline: textBaseline,
-          height: height,
-          locale: locale,
-          foreground: foreground,
-          background: background,
-          shadows: shadows,
-          fontFeatures: fontFeatures,
-          decoration: decoration,
-          decorationColor: decorationColor,
-          decorationStyle: decorationStyle,
-          decorationThickness: decorationThickness,
-          debugLabel: debugLabel,
-          fontFamily: fontFamily,
-          fontFamilyFallback: fontFamilyFallback,
-          package: package),
-    );
-  }
-
+  ///---------------------------------------------------------------------------
+  /// 弹出Toast
+  ///---------------------------------------------------------------------------
   void toast(
       {toastLength = Toast.LENGTH_SHORT,
       gravity = ToastGravity.BOTTOM,
@@ -106,12 +65,20 @@ extension StringEx on String {
   }
 }
 
+///*****************************************************************************
 ///整型扩展
+///*****************************************************************************
 extension IntEx on int {
+  ///---------------------------------------------------------------------------
+  /// 将数字转为秒数
+  ///---------------------------------------------------------------------------
   Duration seconds() {
     return Duration(seconds: this);
   }
 
+  ///---------------------------------------------------------------------------
+  /// 将数字转为边距
+  ///---------------------------------------------------------------------------
   EdgeInsets ei() {
     return EdgeInsets.all(toDouble());
   }
