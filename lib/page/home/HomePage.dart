@@ -24,7 +24,9 @@ import '../../my_lib/extension/BaseExtension.dart';
 
 ///*****************************************************************************
 ///
-/// 主页
+/// 描述：主页
+/// 作者：YeXuDong
+/// 创建时间：2020/7
 ///
 ///*****************************************************************************
 class HomePage extends StatefulWidget {
@@ -213,7 +215,7 @@ class _AppState extends State<HomePage>
         Text(
           userCity,
           style: TextStyle(
-              color: '#393649'.color(),
+              color: Config.BLACK_393649,
               fontSize: 16,
               fontWeight: FontWeight.w600),
         ),
@@ -232,7 +234,7 @@ class _AppState extends State<HomePage>
                 width: 16,
               ),
               Image.asset(
-                'assets/images/search.png',
+                Config.SEARCH,
                 width: 12,
                 height: 12,
               ),
@@ -397,7 +399,7 @@ class _AppState extends State<HomePage>
                       style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w600,
-                          color: "#ff393649".color()),
+                          color: Config.BLACK_393649),
                     ),
                     SizedBox(
                       width: 1,
@@ -545,112 +547,18 @@ class _AppState extends State<HomePage>
     vipType	integer($int32) 禾卡价格 0未知 1有 2无
      */
     if (result.payWay == 2) {
-      return Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            SizedBox(
-              height: 12,
-            ),
-            Text(
-              result.name.maxLength(10),
-              style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-            ),
-            Text(
-              '免费领',
-              style: TextStyle(fontSize: 12, color: Config.RED_B3926F),
-            )
-          ],
-        ),
-        padding: EdgeInsets.only(left: isFirst ? 20 : 12),
-      );
+      return getFreeItem(result, isFirst);
     } else {
       if (result.vipPrice.toDouble() == 0.0) {
-        return Column(
-          children: <Widget>[
-            SizedBox(
-              height: 12,
-            ),
-            Text(
-              result.name,
-              style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-            ),
-            Text(
-              '¥ ${result.price}',
-              style: TextStyle(
-                  fontSize: 20,
-                  color: Config.BLACK_303133,
-                  fontFamily: 'money'),
-            )
-          ],
-        );
+        return getOnePriceItem(result);
       } else {
         if (result.vipId == '0') {
-          return Column(
-            children: <Widget>[
-              SizedBox(
-                height: 12,
-              ),
-              Text(
-                result.name,
-                style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-              ),
-              Text(
-                '¥ ${result.price}',
-                style: TextStyle(
-                    fontSize: 20,
-                    color: Config.BLACK_303133,
-                    fontFamily: 'money'),
-              )
-            ],
-          );
+          return getNormalItem(result);
         } else {
           if (result.vipType == 1)
-            return Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  result.name,
-                  style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-                ),
-                Row(
-                  children: <Widget>[
-                    VipPriceText(
-                      price: result.vipPrice.toString(),
-                    ),
-                    Text(
-                      '¥ ${result.price}',
-                      style: TextStyle(
-                        fontSize: 14, color: Config.GREY_C0C4CC,
-                        decoration: TextDecoration.lineThrough, //删除线
-                        decorationColor: Config.GREY_C0C4CC,
-                      ),
-                    ),
-                  ],
-                )
-              ],
-            );
+            return getDeletePriceItem(result);
           else {
-            return Column(
-              children: <Widget>[
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  result.name,
-                  style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-                ),
-                Text(
-                  '¥ ${result.price}',
-                  style: TextStyle(
-                      fontSize: 20,
-                      color: Config.BLACK_303133,
-                      fontFamily: 'money'),
-                )
-              ],
-            );
+            return getOnePriceItem(result);
           }
         }
       }
@@ -658,7 +566,107 @@ class _AppState extends State<HomePage>
   }
 }
 
-//    rootBundle.loadString('assets/json/province.json').then((value) {
-//      print('----------------------------------------');
-//      print(value.toString());
-//    });
+///---------------------------------------------------------------------------
+/// 普通列表项
+///---------------------------------------------------------------------------
+Widget getNormalItem(Results result) {
+  return  Column(
+    children: <Widget>[
+      SizedBox(
+        height: 12,
+      ),
+      Text(
+        result.name,
+        style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
+      ),
+      Text(
+        '¥ ${result.price}',
+        style: TextStyle(
+            fontSize: 20,
+            color: Config.BLACK_303133,
+            fontFamily: 'money'),
+      )
+    ],
+  );
+}
+
+///---------------------------------------------------------------------------
+/// 只有一个价格的列表项
+///---------------------------------------------------------------------------
+Widget getOnePriceItem(Results result) {
+  return Column(
+    children: <Widget>[
+      SizedBox(
+        height: 12,
+      ),
+      Text(
+        result.name,
+        style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
+      ),
+      Text(
+        '¥ ${result.price}',
+        style: TextStyle(
+            fontSize: 20,
+            color: Config.BLACK_303133,
+            fontFamily: 'money'),
+      )
+    ],
+  );
+}
+
+///---------------------------------------------------------------------------
+/// 带删除价格的列表项
+///---------------------------------------------------------------------------
+Widget getDeletePriceItem(Results result) {
+  return Column(
+    children: <Widget>[
+      SizedBox(
+        height: 12,
+      ),
+      Text(
+        result.name,
+        style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
+      ),
+      Row(
+        children: <Widget>[
+          VipPriceText(
+            price: result.vipPrice.toString(),
+          ),
+          Text(
+            '¥ ${result.price}',
+            style: TextStyle(
+              fontSize: 14, color: Config.GREY_C0C4CC,
+              decoration: TextDecoration.lineThrough, //删除线
+              decorationColor: Config.GREY_C0C4CC,
+            ),
+          ),
+        ],
+      )
+    ],
+  );
+}
+
+///---------------------------------------------------------------------------
+/// 免费领列表项
+///---------------------------------------------------------------------------
+Widget getFreeItem(Results result, bool isFirst) {
+  return Container(
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: <Widget>[
+        SizedBox(
+          height: 12,
+        ),
+        Text(
+          result.name.maxLength(10),
+          style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
+        ),
+        Text(
+          '免费领',
+          style: TextStyle(fontSize: 12, color: Config.RED_B3926F),
+        )
+      ],
+    ),
+    padding: EdgeInsets.only(left: isFirst ? 20 : 12),
+  );
+}

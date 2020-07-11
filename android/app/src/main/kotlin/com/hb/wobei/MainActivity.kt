@@ -10,6 +10,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.BatteryManager
 import android.os.Build
+import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import com.amap.api.location.AMapLocation

@@ -1,17 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:wobei/bean/SearchWord.dart';
 import 'package:wobei/constant/Config.dart';
-import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/widget/EditText.dart';
 import 'package:wobei/widget/MyWidget.dart';
+
 import '../../my_lib/extension/BaseExtension.dart';
 
 ///*****************************************************************************
 ///
-/// 搜索页
+/// 描述：搜索页
+/// 作者：YeXudong
+/// 创建时间：2020/7
 ///
 ///*****************************************************************************
 class SearchPage extends StatefulWidget {

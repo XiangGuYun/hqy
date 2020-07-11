@@ -61,6 +61,6 @@ class MainApp extends StatelessWidget {
   }
 
   Widget getFirstPage() {
-    return WelcomePage();
+    return ScaffoldPage();
   }
 }

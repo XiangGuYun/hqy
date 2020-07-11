@@ -11,8 +11,10 @@ import 'package:wobei/page/me/MePage.dart';
 import '../my_lib/extension/BaseExtension.dart';
 
 /// ***************************************************************************
+///
 /// App脚手架页面
 /// 作用类似与Android中托管多个Fragment的Activity
+///
 /// ***************************************************************************
 class ScaffoldPage extends StatefulWidget {
   @override
@@ -137,7 +139,9 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
 
   var exitTime = 0;
 
+  ///---------------------------------------------------------------------------
   /// 连续双击退出应用
+  ///---------------------------------------------------------------------------
   Future<bool> _requestPop() async {
     if (System.currentTimeMillis() - exitTime > 2000) {
       "再按一次退出应用".toast();

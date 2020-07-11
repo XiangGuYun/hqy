@@ -2,6 +2,7 @@ part of base_extension;
 
 ///组件扩展
 extension WidgetEx on Widget {
+
   ///设置可见性，相当于Android中的Visible和Invisible
   /// visible 是否可见
   /// millis 淡入淡出时间，单位毫秒
@@ -172,6 +173,7 @@ extension WidgetEx on Widget {
     );
   }
 
+  /// 设置颜色
   Widget setColor(Color color) {
     return Container(
       color: color,
@@ -179,7 +181,7 @@ extension WidgetEx on Widget {
     );
   }
 
-  ///设置组件装饰
+  /// 设置组件装饰
   Widget setDecoration(
       {Color color,
       BoxBorder border,

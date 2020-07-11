@@ -2,17 +2,38 @@ import 'package:flutter/cupertino.dart';
 import 'package:wobei/my_lib/utils/PathUtils.dart';
 import 'package:wobei/my_lib/utils/StorageUtils.dart';
 
-//////////////////
-///管理所有配置信息
-/////////////////
+///*****************************************************************************
+///
+/// 管理所有配置信息
+///
+///*****************************************************************************
 class Config{
-
+  ///---------------------------------------------------------------------------
+  /// 测试资源
+  ///---------------------------------------------------------------------------
   static const String TEST_IMG = 'https://dss1.bdstatic.com/70cFuXSh_Q1YnxGkpoWK1HF6hhy/it/u=3321238736,733069773&fm=26&gp=0.jpg';
   static const String TEST_IMG1 = 'https://ss0.bdstatic.com/70cFuHSh_Q1YnxGkpoWK1HF6hhy/it/u=3882521289,1164860711&fm=26&gp=0.jpg';
 
-  /**
-   * 图片资源
-   */
+  ///---------------------------------------------------------------------------
+  /// 颜色资源
+  ///---------------------------------------------------------------------------
+  static const Color BLACK_393649 = Color(0xFF393649);
+  static const Color BLACK_303133 = Color(0xFF303133);
+  static const Color GREY_C9C8CD = Color(0xFFC9C8CD);
+  static const Color GREY_C0C4CC = Color(0xFFC0C4CC);
+  static const Color GREY_A5A3AC = Color(0xFFA5A3AC);
+  static const Color RED_B3926F = Color(0xFFB3926F);
+  static const Color GOLD_FFE2C0 = Color(0xFFFFE2C0);
+  //黑色按钮按下后的背景色
+  static const Color BTN_TAP_DOWN = Color(0x66303133);
+  //禁用按钮背景色
+  static const Color BTN_ENABLE_FALSE = Color(0xff909399);
+  //分割线颜色
+  static const Color DIVIDER_COLOR = Color(0xffedecee);
+
+  ///---------------------------------------------------------------------------
+  /// 图片资源
+  ///---------------------------------------------------------------------------
   static const String ICON_COVER = 'assets/images/icon_cover.png';
   static const String BANNER_COVER = 'assets/images/banner_cover.png';
   static const String RIGHT_COVER = 'assets/images/right_cover.png';
@@ -217,23 +238,5 @@ class Config{
   static const String WALLET_BG = 'assets/images/wallet_bg.png';
   static const String WECHAT = 'assets/images/wechat.png';
   static const String WELCOME = 'assets/images/welcome.png';
-
-  /**
-   * 颜色资源
-   */
-  static const Color BLACK_393649 = Color(0xFF393649);
-  static const Color BLACK_303133 = Color(0xFF303133);
-  static const Color GREY_C9C8CD = Color(0xFFC9C8CD);
-  static const Color GREY_C0C4CC = Color(0xFFC0C4CC);
-  static const Color GREY_A5A3AC = Color(0xFFA5A3AC);
-  static const Color RED_B3926F = Color(0xFFB3926F);
-  static const Color GOLD_FFE2C0 = Color(0xFFFFE2C0);
-  //黑色按钮按下后的背景色
-  static const Color BTN_TAP_DOWN = Color(0x66303133);
-  //禁用按钮背景色
-  static const Color BTN_ENABLE_FALSE = Color(0xff909399);
-  //分割线颜色
-  static const Color DIVIDER_COLOR = Color(0xffedecee);
-
 
 }
