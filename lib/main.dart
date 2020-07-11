@@ -13,6 +13,8 @@ import 'page/ScaffoldPage.dart';
 void main() {
   //在调用runApp之前初始化绑定时，需要调用此方法。
   WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
+
   Global.init().then((e){
     runApp(MainApp());
   });

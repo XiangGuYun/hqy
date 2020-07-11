@@ -34,7 +34,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
   @override
   void initState() {
     super.initState();
-    hideStatusBar();
+    showStatusBar();
     setStatusBarColor(true, Colors.transparent);
     _pageController = PageController(initialPage: 0, keepPage: true);
   }
