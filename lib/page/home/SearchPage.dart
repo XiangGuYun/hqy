@@ -17,9 +17,9 @@ import '../../my_lib/extension/BaseExtension.dart';
 ///*****************************************************************************
 class SearchPage extends StatefulWidget {
 
-  final List<String> recommendWords;
+  final List<String> arguments;
 
-  SearchPage({this.recommendWords});
+  SearchPage({this.arguments});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -32,7 +32,7 @@ class _SearchPageState extends State<SearchPage> with BaseUtils {
   @override
   void initState() {
     super.initState();
-    wordList = widget.recommendWords;
+    wordList = widget.arguments;
   }
 
   @override

@@ -13,9 +13,7 @@ import 'page/ScaffoldPage.dart';
 void main() {
   //在调用runApp之前初始化绑定时，需要调用此方法。
   WidgetsFlutterBinding.ensureInitialized();
-  SystemChrome.setEnabledSystemUIOverlays(SystemUiOverlay.values);
-
-  Global.init().then((e){
+  Global.init().then((e) {
     runApp(MainApp());
   });
 }
@@ -32,7 +30,9 @@ class MainApp extends StatelessWidget {
     AppRoute.AD_PAGE: (context, {arguments}) => ADPage(),
     AppRoute.HOME_PAGE: (context) => ScaffoldPage(),
     AppRoute.LOGIN: (context) => LoginPage(),
-    AppRoute.SEARCH_PAGE: (context, recommendWords) => SearchPage(recommendWords: recommendWords,),
+    // 注意：SearchPage中的arguments如果可选参数，那么这里的arguments必须也是可选参数
+    AppRoute.SEARCH_PAGE: (BuildContext context, {List<String> arguments}) =>
+        SearchPage(arguments: arguments),
   };
 
   @override

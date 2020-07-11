@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/System.dart';
@@ -34,7 +35,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
   @override
   void initState() {
     super.initState();
-    showStatusBar();
+//    showStatusBar();
     setStatusBarColor(true, Colors.transparent);
     _pageController = PageController(initialPage: 0, keepPage: true);
   }
