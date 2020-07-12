@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:dio/dio.dart';
 import 'package:wobei/bean/LoginData.dart';
 import 'package:wobei/bean/SearchWord.dart';
@@ -32,9 +34,11 @@ class Req {
   ///---------------------------------------------------------------------------
   /// 获取图片验证码
   ///---------------------------------------------------------------------------
-  static void getPicVerificationCode() {
-    // todo
+  static Future<Uint8List> getPicVerificationCode(String phone) {
+    return NetUtils.getBitmap(URL.VERIFY_PIC, Map()..['phone'] = phone);
   }
+
+
 
   ///---------------------------------------------------------------------------
   /// 获取轮播栏的信息
@@ -94,6 +98,23 @@ class Req {
   static Future<Response> getKeyword(Function callback) {
     NetUtils.post(URL.GET_SEARCH_WORDS, Map()..['port'] = '1', (c, m, s, d) {
       callback(SearchWord.fromJson(d));
+    });
+  }
+
+  ///---------------------------------------------------------------------------
+  ///
+  /// 获取手机验证码
+  ///
+  /// verifyPictureCode 图片验证码
+  ///
+  ///---------------------------------------------------------------------------
+  static void getVCode(String phone, Function callback, {String verifyPictureCode}) {
+    Map params = Map<String, String>()..['phone'] = phone;
+    if(verifyPictureCode != null){
+      params['verifyPictureCode'] = verifyPictureCode;
+    }
+    NetUtils.post(URL.SEND_MESSAGE, params, (c, m, s, d) {
+      callback(d['token']);
     });
   }
 }

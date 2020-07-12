@@ -1,5 +1,9 @@
 import 'dart:async';
+import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wobei/bean/LoginData.dart';
@@ -9,6 +13,7 @@ import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/NetUtils.dart';
 import 'package:wobei/my_lib/utils/SPUtils.dart';
+import 'package:wobei/page/dialog/PicVertiCode.dart';
 
 import '../../my_lib/extension/BaseExtension.dart';
 
@@ -51,13 +56,13 @@ class _AppState extends State<App>
   var buttonColor = Config.BTN_ENABLE_FALSE;
 
   ///用户输入的手机号码
-  var valuePhoneNumber;
+  String valuePhoneNumber = '';
 
   ///用户输入的密码
-  var valuePassword;
+  String valuePassword = '';
 
   ///用户输入的验证码
-  var valueVerificationCode;
+  String valueVerificationCode = '';
 
   ///是否以密码方式登录
   var isPasswordLogin = false;
@@ -79,6 +84,10 @@ class _AppState extends State<App>
 
   ///验证码（密码）输入框可输入的最大长度
   var maxLengthOfSecondTextField = 4;
+
+  String textGetVCode = '获取验证码';
+
+  Uint8List list = null;
 
   @override
   void initState() {
@@ -244,12 +253,14 @@ class _AppState extends State<App>
                       .setPadding1(bottom: 5),
                   Positioned(
                     child: Text(
-                      '获取验证码',
+                      textGetVCode,
                       style: TextStyle(
                           fontSize: 16,
                           color: Color(0xff909399),
                           fontWeight: FontWeight.w600),
-                    ).setVisible2(getVerificationCodeVisible),
+                    )
+                        .setGestureDetector(onTap: _onGetVCodeClick)
+                        .setVisible2(getVerificationCodeVisible),
                     right: 0,
                     bottom: 18.5,
                   )
@@ -302,6 +313,7 @@ class _AppState extends State<App>
               }
             });
           }),
+          getImage(),
           SizedBox(
             height: 10,
           ),
@@ -341,13 +353,62 @@ class _AppState extends State<App>
     }
   }
 
+  /// 倒计时秒数
+  int time = 60;
+
   ///---------------------------------------------------------------------------
   /// 执行可再次获取验证码的倒计时
   ///---------------------------------------------------------------------------
   void startCountDown() {
-    Timer.periodic(Duration(seconds: 1), (task) {});
+    Timer.periodic(Duration(seconds: 1), (task) {
+      setState(() {
+        time--;
+        if (time != 0) {
+          textGetVCode = time.toString() + 's';
+        } else {
+          textGetVCode = '获取验证码';
+          time = 60;
+          task.cancel();
+        }
+      });
+    });
+  }
+
+  ///---------------------------------------------------------------------------
+  /// "获取验证码"点击事件
+  ///---------------------------------------------------------------------------
+  void _onGetVCodeClick() {
+    if (valuePhoneNumber.isEmpty || valuePhoneNumber.length != 11) {
+      "请输入正确的手机号码".toast();
+      return;
+    }
+    if (textGetVCode == '获取验证码') {
+      Req.getVCode(valuePhoneNumber, (String token) {
+        if (token == '-1') {
+          //第一次登录
+          Req.getVCode(valuePhoneNumber, () {
+            startCountDown();
+            '验证码已发送'.toast();
+          });
+        } else {
+          //非第一次登录，弹出图片验证码对话框
+          Req.getPicVerificationCode(valuePhoneNumber).then((bytes) {
+            TuPianYanZhengMaDialog(phone: valuePhoneNumber, bytes: bytes)
+                .show(context);
+          });
+        }
+      });
+    }
   }
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget getImage() {
+    if (list == null) {
+      return Text('测试');
+    } else {
+      return Image.memory(list);
+    }
+  }
 }

@@ -36,6 +36,12 @@ class _SearchPageState extends State<SearchPage> with BaseUtils {
   }
 
   @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
@@ -82,6 +88,7 @@ class _SearchPageState extends State<SearchPage> with BaseUtils {
                           hint: '爱奇艺VIP月卡',
                           height: 24,
                           maxLength: 10,
+
                           margin: EdgeInsets.only(left: 38, top: 5),
                           padding: EdgeInsets.only(top: 5),
                         ),

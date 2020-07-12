@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:wobei/page/dialog/BaseDialog.dart';
 
-///会员享优惠对话框
-class HuiYuanXiangYouHuiDialog extends Dialog{
+///*****************************************************************************
+///
+/// 会员享优惠对话框
+///
+///*****************************************************************************
+class HuiYuanXiangYouHuiDialog extends BaseDialog{
 
-  String price;
-  Function leftBtnClick;
-  Function rightBtnClick;
+  /// 优惠价格
+  final String price;
+  /// "原价购买"点击事件
+  final Function leftBtnClick;
+  /// "购买会员"点击事件
+  final Function rightBtnClick;
 
   HuiYuanXiangYouHuiDialog(this.price, {this.leftBtnClick, this.rightBtnClick});
 

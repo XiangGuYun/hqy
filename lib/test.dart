@@ -13,6 +13,8 @@ import 'package:wobei/widget/myorder/CompletedItem.dart';
 import 'package:wobei/widget/myorder/FailuredItem.dart';
 import 'package:wobei/widget/myorder/ForDeliverItem.dart';
 import 'package:wobei/widget/myorder/ForPaymentItem.dart';
+import 'page/dialog/PicVertiCode.dart';
+import 'page/dialog/HuiYuanRecommendDialog.dart';
 
 ///********************************************************************************************
 ///
@@ -26,35 +28,29 @@ class TestApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         theme: ThemeData.light(),
         home: Scaffold(
-          body: Column(
-            children: <Widget>[
-              SizedBox(
-                height: 12,
-              ),
-              Text(
-                'result.name',
-                style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-              ),
-              Row(
-                children: <Widget>[
-                  VipPriceText(
-                    price: '12.00',
-                  ),
-                  Text(
-                    '¥ 14.50',
-                    style: TextStyle(
-                      fontSize: 14, color: Config.GREY_C0C4CC,
-                      decoration: TextDecoration.lineThrough, //删除线
-                      decorationColor: Config.GREY_C0C4CC,
-                    ),
-                  ),
-                ],
-              )
-            ],
-          ),
+          body: DialogPage(),
         ));
   }
 }
+
+class DialogPage extends StatefulWidget {
+  @override
+  _DialogPageState createState() => _DialogPageState();
+}
+
+class _DialogPageState extends State<DialogPage> {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: RaisedButton(
+        child: Text('1111'),
+        onPressed: (){
+        },
+      ),
+    );
+  }
+}
+
 
 //Scaffold(
 //appBar: PreferredSize(

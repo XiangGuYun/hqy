@@ -408,7 +408,8 @@ class _AppState extends State<HomePage>
                       "进入专区",
                       style:
                           TextStyle(fontSize: 12, color: "#ffa5a3ac".color()),
-                    )
+                    ),
+                    Image.asset(Config.DETAIL_LIGHT, width: 11, height: 11, fit: BoxFit.cover,)
                   ],
                 ).setPadding1(left: 20, right: 20),
                 SizedBox(
@@ -556,7 +557,7 @@ class _AppState extends State<HomePage>
           return getNormalItem(result);
         } else {
           if (result.vipType == 1)
-            return getDeletePriceItem(result);
+            return getDeletePriceItem(result, isFirst);
           else {
             return getOnePriceItem(result);
           }
@@ -617,7 +618,7 @@ Widget getOnePriceItem(Results result) {
 ///---------------------------------------------------------------------------
 /// 带删除价格的列表项
 ///---------------------------------------------------------------------------
-Widget getDeletePriceItem(Results result) {
+Widget getDeletePriceItem(Results result,bool isFirst) {
   return Column(
     children: <Widget>[
       SizedBox(
@@ -626,20 +627,34 @@ Widget getDeletePriceItem(Results result) {
       Text(
         result.name,
         style: TextStyle(fontSize: 14, color: Config.BLACK_303133),
-      ),
+      ).setMargin1(left: isFirst?20:1),
       Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.end,
         children: <Widget>[
+          SizedBox(width: isFirst?20:12,),
           VipPriceText(
             price: result.vipPrice.toString(),
+            bigFontSize: 20,
+            smallFontSize: 12,
           ),
-          Text(
-            '¥ ${result.price}',
-            style: TextStyle(
-              fontSize: 14, color: Config.GREY_C0C4CC,
-              decoration: TextDecoration.lineThrough, //删除线
-              decorationColor: Config.GREY_C0C4CC,
+          Container(
+            child: Image.asset(Config.HECARD_PRICE),
+            width: 22,
+            height: 10,
+            margin: EdgeInsets.only(bottom: 3),
+          ),
+          SizedBox(width: 8,),
+          Container(
+            child: Text(
+              '¥ ${result.price}',
+              style: TextStyle(
+                fontSize: 12, color: Config.GREY_C0C4CC,
+                decoration: TextDecoration.lineThrough, //删除线
+                decorationColor: Config.GREY_C0C4CC,
+              ),
             ),
-          ),
+          )
         ],
       )
     ],

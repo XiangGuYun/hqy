@@ -48,6 +48,8 @@ class EditText extends StatefulWidget {
   ///最大行数
   final int maxLines;
 
+  final FocusNode focusNode;
+
   EditText(this.width,
       {Key key,
       this.height = 36,
@@ -63,6 +65,7 @@ class EditText extends StatefulWidget {
       this.textColor = const Color(0xFF393649),
       this.margin = const EdgeInsets.all(0),
       this.padding = const EdgeInsets.all(0),
+        this.focusNode=null,
       this.maxLines = 1})
       : super(key: key);
 
@@ -79,6 +82,7 @@ class _EditTextState extends State<EditText> {
       margin: widget.margin,
       padding: widget.padding,
       child: TextField(
+        focusNode: widget.focusNode,
         textInputAction: widget.action,
         keyboardType: widget.inputType,
         style: TextStyle(fontSize: widget.textSize, color: widget.textColor),
