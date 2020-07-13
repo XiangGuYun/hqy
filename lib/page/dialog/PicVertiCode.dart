@@ -22,7 +22,9 @@ class TuPianYanZhengMaDialog extends BaseDialog {
   /// 手机号码
   final String phone;
 
-  TuPianYanZhengMaDialog({this.phone = '', this.bytes});
+  final BuildContext ctx;
+
+  TuPianYanZhengMaDialog({this.ctx, this.phone = '', this.bytes});
 
   @override
   Widget build(BuildContext context) {
@@ -64,6 +66,7 @@ class TuPianYanZhengMaDialog extends BaseDialog {
                       inputType: TextInputType.number,
                       onChanged: (value) {
                         code = value;
+                        print('===========${code.toString().length}');
                       },
                     ),
                     flex: 1,
@@ -72,7 +75,7 @@ class TuPianYanZhengMaDialog extends BaseDialog {
                     bytes,
                     width: 90,
                     height: 40,
-                    fit: BoxFit.cover,
+                    fit: BoxFit.fill,
                   ).setClipRRect(5),
                   SizedBox(
                     width: 30,
@@ -106,7 +109,7 @@ class TuPianYanZhengMaDialog extends BaseDialog {
                             TextStyle(fontSize: 16, color: Color(0xffa5a3ac)),
                       ),
                       onTap: () {
-                        Navigator.of(context).pop();
+                        Navigator.of(ctx).pop();
                       },
                     ).setCenter().setExpanded(1),
                     Container(
@@ -121,9 +124,9 @@ class TuPianYanZhengMaDialog extends BaseDialog {
                           '请输入正确的验证码'.toast();
                           return;
                         }
-                        Req.getVCode(phone, () {
+                        Req.getVCode(phone, (token) {
+                          Navigator.of(ctx).pop();
                           '验证码已发送'.toast();
-                          Navigator.of(context).pop();
                         }, verifyPictureCode: code);
                       },
                       child: Text(

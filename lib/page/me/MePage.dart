@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:wobei/bean/MeData.dart';
 import 'package:wobei/constant/Config.dart';
+import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
@@ -13,6 +15,15 @@ class MePage extends StatefulWidget {
 
 class _AppState extends State<MePage>
     with AutomaticKeepAliveClientMixin, BaseUtils {
+
+  @override
+  void initState() {
+    super.initState();
+    Req.getMeInfo((MeData me){
+
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -73,8 +84,8 @@ class _AppState extends State<MePage>
                     top: 89 + getStatusBarHeight(),
                   ),
                   Positioned(
-                    child: Image.network(
-                      Config.TEST_IMG,
+                    child: Image.asset(
+                      Config.DEFAULT_AVATAR,
                       width: 60,
                       height: 60,
                       fit: BoxFit.cover,

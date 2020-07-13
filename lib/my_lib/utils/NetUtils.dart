@@ -6,6 +6,7 @@ import 'package:crypto/crypto.dart';
 import 'package:dio/dio.dart';
 import 'package:package_info/package_info.dart';
 import 'package:wobei/common/Global.dart';
+import 'package:wobei/lesson/eventbus/EventBus.dart';
 import 'package:wobei/my_lib/utils/AppUtils.dart';
 import 'package:wobei/my_lib/utils/SPUtils.dart';
 import 'package:wobei/my_lib/utils/System.dart';
@@ -34,11 +35,16 @@ class NetUtils {
   static void post(
       String url, Map<String, String> parameters, Function getResult,
       {handleBySelf = false}) async {
+
+    if(url == URL.LOOKUP_DATA){
+      print(1);
+    }
+
     //放置请求头参数
     var headers = Map<String, dynamic>();
 
     //获取包信息
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+//    PackageInfo packageInfo = await PackageInfo.fromPlatform();
     //获取当前时间
     var currentTime = System.currentTimeMillis();
     //获取设备ID
@@ -49,12 +55,11 @@ class NetUtils {
     //生成md5加密数据
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
-    SPUtils.getString("token", (token) {
-      if (token.toString().isNotEmpty) {
-        headers['Authorization'] = 'Bearer $token';
-        SPUtils.putString("token", token);
-      }
-    });
+
+    if(Global.prefs.getString('token').isNotEmpty){
+      headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
+    }
+
     //将md5数据放入请求头
     var options = Options(headers: headers);
     //将共同参数放入到map中
@@ -67,7 +72,7 @@ class NetUtils {
         queryParameters: parameters, options: options);
     if ([4004, 4005, 15210].contains(response.data['code'])) {
       //对特定错误响应码进行处理
-      _handleCode(response.data['code']);
+      _handleCode(response.data['code'], response.data['msg']);
       return;
     }
     print(json.encode(response.data));
@@ -113,12 +118,10 @@ class NetUtils {
     //生成md5加密数据
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
-    SPUtils.getString("token", (token) {
-      if (token.toString().isNotEmpty) {
-        headers['Authorization'] = 'Bearer $token';
-        SPUtils.putString("token", token);
-      }
-    });
+
+    if(Global.prefs.getString('token').isNotEmpty){
+      headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
+    }
 
     //将md5数据放入请求头
     var options = Options(headers: headers);
@@ -137,7 +140,7 @@ class NetUtils {
         queryParameters: parameters, options: options);
     if ([4004, 4005, 15210].contains(response.data['code'])) {
       //对特定错误响应码进行处理
-      _handleCode(response.data['code']);
+      _handleCode(response.data['code'], response.data['msg']);
       return;
     }
     if (!handleBySelf) {
@@ -179,12 +182,10 @@ class NetUtils {
     //生成md5加密数据
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
-    SPUtils.getString("token", (token) {
-      if (token.toString().isNotEmpty) {
-        headers['Authorization'] = 'Bearer $token';
-        SPUtils.putString("token", token);
-      }
-    });
+
+    if(Global.prefs.getString('token').isNotEmpty){
+      headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
+    }
 
     //将md5数据放入请求头
     var options = Options(headers: headers);
@@ -204,7 +205,7 @@ class NetUtils {
         queryParameters: parameters, options: options);
     if ([4004, 4005, 15210].contains(response.data['code'])) {
       //对特定错误响应码进行处理
-      _handleCode(response.data['code']);
+      _handleCode(response.data['code'], response.data['msg']);
       return null;
     }
     if (!handleBySelf) {
@@ -238,12 +239,10 @@ class NetUtils {
     //生成md5加密数据
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
-    SPUtils.getString("token", (token) {
-      if (token.toString().isNotEmpty) {
-        headers['Authorization'] = 'Bearer $token';
-        SPUtils.putString("token", token);
-      }
-    });
+
+    if(Global.prefs.getString('token').isNotEmpty){
+      headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
+    }
 
     //将md5数据放入请求头
     var options = Options(headers: headers);
@@ -270,15 +269,16 @@ class NetUtils {
   ///---------------------------------------------------------------------------
   /// 处理特定错误码
   ///---------------------------------------------------------------------------
-  static void _handleCode(code) {
+  static void _handleCode(code, msg) {
+    ToastUtils.show(msg);
     switch (code) {
-      case '4004': //未登录
+      case 4004: //未登录
+        bus.emit('Scaffold', 'unlogin');
+        break;
+      case 4005: //未实名认证
 
         break;
-      case '4005': //未实名认证
-
-        break;
-      case '15210': //未设置密码
+      case 15210: //未设置密码
 
         break;
     }

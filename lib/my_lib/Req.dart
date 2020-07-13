@@ -2,9 +2,11 @@ import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:wobei/bean/LoginData.dart';
+import 'package:wobei/bean/MeData.dart';
 import 'package:wobei/bean/SearchWord.dart';
 import 'package:wobei/constant/URL.dart';
 import 'package:wobei/my_lib/utils/NetUtils.dart';
+import 'package:wobei/my_lib/utils/ToastUtils.dart';
 
 ///*****************************************************************************
 /// 管理所有的接口请求
@@ -35,7 +37,7 @@ class Req {
   /// 获取图片验证码
   ///---------------------------------------------------------------------------
   static Future<Uint8List> getPicVerificationCode(String phone) {
-    return NetUtils.getBitmap(URL.VERIFY_PIC, Map()..['phone'] = phone);
+    return NetUtils.getBitmap(URL.VERIFY_PIC, Map<String, String>()..['phone'] = phone);
   }
 
 
@@ -117,4 +119,16 @@ class Req {
       callback(d['token']);
     });
   }
+
+  ///---------------------------------------------------------------------------
+  /// 获取“我的”信息
+  ///---------------------------------------------------------------------------
+  static void getMeInfo(Function callback){
+    Map params = Map<String, String>();
+    NetUtils.post(URL.LOOKUP_DATA, params, (c, m, s, d){
+      ToastUtils.show(m.toString());
+      callback(MeData.fromJson(d));
+    });
+  }
+
 }

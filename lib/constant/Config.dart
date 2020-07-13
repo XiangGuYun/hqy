@@ -34,6 +34,7 @@ class Config{
   ///---------------------------------------------------------------------------
   /// 图片资源
   ///---------------------------------------------------------------------------
+  static const String DEFAULT_AVATAR = 'assets/images/default_avatar.png';
   static const String ICON_COVER = 'assets/images/icon_cover.png';
   static const String BANNER_COVER = 'assets/images/banner_cover.png';
   static const String RIGHT_COVER = 'assets/images/right_cover.png';

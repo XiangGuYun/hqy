@@ -672,7 +672,7 @@ flutter:
     - assets/images/welcome.png
     - assets/images/2.0x/welcome.png
     - assets/images/3.0x/welcome.png
-
+    - assets/images/default_avatar.png
 
     # To add assets to your application, add an assets section, like this:
     # assets:

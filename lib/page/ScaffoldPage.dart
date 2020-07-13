@@ -3,8 +3,10 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wobei/constant/Config.dart';
+import 'package:wobei/lesson/eventbus/EventBus.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/System.dart';
+import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/page/home/HomePage.dart';
 import 'package:wobei/page/login/LoginPage.dart';
 import 'package:wobei/page/me/MePage.dart';
@@ -32,12 +34,37 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
   /// 翻页控制器
   PageController _pageController;
 
+  /// 是否处于登录状态
+  var isLogin = false;
+
   @override
   void initState() {
     super.initState();
 //    showStatusBar();
+    bus.on('Scaffold', (arg) {
+      switch(arg){
+        case 'login': // 登录
+          setState(() {
+            isLogin = true;
+          });
+          break;
+        case 'unlogin': // 未登录
+            setState(() {
+              currentIndex = 2;
+              isLogin = false;
+              _pageController.jumpToPage(2);
+            });
+            break;
+      }
+    });
     setStatusBarColor(true, Colors.transparent);
     _pageController = PageController(initialPage: 0, keepPage: true);
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    bus.off('Scaffold');
   }
 
   @override
@@ -66,7 +93,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                       return MePage();
                       break;
                     default:
-                      return LoginPage();
+                      return isLogin ? MePage() : LoginPage();
                   }
                 }).setExpanded(1),
             Divider(

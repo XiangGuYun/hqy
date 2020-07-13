@@ -7,12 +7,15 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:wobei/bean/LoginData.dart';
+import 'package:wobei/common/Global.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/constant/URL.dart';
+import 'package:wobei/lesson/eventbus/EventBus.dart';
 import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import 'package:wobei/my_lib/utils/NetUtils.dart';
 import 'package:wobei/my_lib/utils/SPUtils.dart';
+import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/page/dialog/PicVertiCode.dart';
 
 import '../../my_lib/extension/BaseExtension.dart';
@@ -221,8 +224,16 @@ class _AppState extends State<App>
                     style: TextStyle(fontSize: 18, color: Color(0xFF303133)),
                     //监听输入事件
                     onChanged: (value) {
-                      valuePassword = value;
-                      if (valuePassword.toString().length >= 6 &&
+                      if (isPasswordLogin) {
+                        valuePassword = value;
+                      } else {
+                        valueVerificationCode = value;
+                      }
+                      print('valueVerificationCode is $valueVerificationCode');
+
+                      if ((isPasswordLogin
+                              ? valuePassword.toString().length >= 6
+                              : valueVerificationCode.toString().length == 4) &&
                           valuePhoneNumber.toString().length == 11) {
                         setState(() {
                           buttonColor = Config.BLACK_303133;
@@ -259,7 +270,9 @@ class _AppState extends State<App>
                           color: Color(0xff909399),
                           fontWeight: FontWeight.w600),
                     )
-                        .setGestureDetector(onTap: _onGetVCodeClick)
+                        .setGestureDetector(onTap: (){
+                      _onGetVCodeClick(context);
+                    })
                         .setVisible2(getVerificationCodeVisible),
                     right: 0,
                     bottom: 18.5,
@@ -297,23 +310,26 @@ class _AppState extends State<App>
             });
           }, onTapUp: (details) {
             setState(() {
-              buttonColor = Config.BLACK_303133;
+              buttonColor = (valuePhoneNumber.length != 11 || isPasswordLogin
+                      ? valuePassword.length < 6
+                      : valueVerificationCode.length != 4)
+                  ? Config.BTN_ENABLE_FALSE
+                  : Config.BLACK_303133;
             });
           }, onTap: () {
-            if (buttonColor != Config.BLACK_303133) return;
-            Req.login(isPasswordLogin, valuePhoneNumber, valuePassword,
+            if (valuePhoneNumber.length != 11 || isPasswordLogin
+                ? valuePassword.length < 6
+                : valueVerificationCode.length != 4) return;
+            Req.login(
+                isPasswordLogin,
+                valuePhoneNumber,
+                isPasswordLogin ? valuePassword : valueVerificationCode,
                 valueVerificationCode, (data) {
-              if (data.token != '-1') {
-                //第一次登录
-                '验证码已发送'.toast();
-                startCountDown();
-              } else {
-                //非第一次登录,弹出图片验证码对话框
-                SPUtils.putString('token', data.token);
-              }
+                  Global.prefs.setString('token', data.token);
+              ToastUtils.show("登录成功");
+              bus.emit('Scaffold', 'login');
             });
           }),
-          getImage(),
           SizedBox(
             height: 10,
           ),
@@ -377,23 +393,21 @@ class _AppState extends State<App>
   ///---------------------------------------------------------------------------
   /// "获取验证码"点击事件
   ///---------------------------------------------------------------------------
-  void _onGetVCodeClick() {
+  void _onGetVCodeClick(context) {
     if (valuePhoneNumber.isEmpty || valuePhoneNumber.length != 11) {
       "请输入正确的手机号码".toast();
       return;
     }
     if (textGetVCode == '获取验证码') {
-      Req.getVCode(valuePhoneNumber, (String token) {
-        if (token == '-1') {
-          //第一次登录
-          Req.getVCode(valuePhoneNumber, () {
-            startCountDown();
-            '验证码已发送'.toast();
-          });
+      Req.getVCode(valuePhoneNumber, (token) {
+        if (token.toString() != '-1') {
+          // 第一次登录
+          '验证码已发送'.toast();
+          startCountDown();
         } else {
-          //非第一次登录，弹出图片验证码对话框
+          // 非第一次登录，弹出图片验证码对话框
           Req.getPicVerificationCode(valuePhoneNumber).then((bytes) {
-            TuPianYanZhengMaDialog(phone: valuePhoneNumber, bytes: bytes)
+            TuPianYanZhengMaDialog(ctx: context, phone: valuePhoneNumber, bytes: bytes)
                 .show(context);
           });
         }
@@ -403,12 +417,4 @@ class _AppState extends State<App>
 
   @override
   bool get wantKeepAlive => true;
-
-  Widget getImage() {
-    if (list == null) {
-      return Text('测试');
-    } else {
-      return Image.memory(list);
-    }
-  }
 }

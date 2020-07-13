@@ -87,7 +87,7 @@ class _EditTextState extends State<EditText> {
         keyboardType: widget.inputType,
         style: TextStyle(fontSize: widget.textSize, color: widget.textColor),
         //监听输入事件
-//        onChanged: widget.onChanged,
+        onChanged: widget.onChanged,
         inputFormatters: [
           LengthLimitingTextInputFormatter(widget.maxLength),
         ],
