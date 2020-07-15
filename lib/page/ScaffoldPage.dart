@@ -11,6 +11,7 @@ import 'package:wobei/my_lib/utils/ToastUtils.dart';
 import 'package:wobei/page/home/HomePage.dart';
 import 'package:wobei/page/login/LoginPage.dart';
 import 'package:wobei/page/me/MePage.dart';
+import 'package:wobei/page/right/RightPage.dart';
 
 import '../my_lib/extension/BaseExtension.dart';
 
@@ -91,7 +92,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
                       return HomePage();
                       break;
                     case 1:
-                      return MePage();
+                      return RightPage();
                       break;
                     default:
                       return isLogin ? MePage() : LoginPage();

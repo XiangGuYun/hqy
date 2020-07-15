@@ -237,6 +237,7 @@ class _AppState extends State<App>
                 children: <Widget>[
                   TextField(
                     style: TextStyle(fontSize: 18, color: Color(0xFF303133)),
+                    keyboardType: isPasswordLogin?TextInputType.visiblePassword:TextInputType.number,
                     //监听输入事件
                     onChanged: (value) {
                       if (isPasswordLogin) {
@@ -371,6 +372,7 @@ class _AppState extends State<App>
                     hintOfSecondTextField = '请输入验证码';
                     getVerificationCodeVisible = true;
                     hintVisible = true;
+                    isPasswordLogin = false;
                   } else {
                     //登录方式变为密码登录
                     loginMethod = '验证码登录';
@@ -378,6 +380,7 @@ class _AppState extends State<App>
                     hintOfSecondTextField = '请输入密码';
                     getVerificationCodeVisible = false;
                     hintVisible = false;
+                    isPasswordLogin = true;
                   }
                 });
               }),

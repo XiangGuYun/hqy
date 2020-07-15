@@ -6,7 +6,7 @@ import 'package:wobei/lesson/provider/ProviderTest.dart';
 import 'package:wobei/lesson/pull_to_refresh/PullToRefreshPage.dart';
 import 'package:wobei/page/me/MePage.dart';
 import 'package:wobei/page/order/ShippingAddressPage.dart';
-import 'package:wobei/widget/TabPager.dart';
+import 'file:///D:/flutter_app/hequanyi/hqy/lib/page/right/RightPage.dart';
 import 'package:wobei/widget/TitleBar.dart';
 import 'package:wobei/widget/VipPriceText.dart';
 import 'package:wobei/widget/myorder/CompletedItem.dart';

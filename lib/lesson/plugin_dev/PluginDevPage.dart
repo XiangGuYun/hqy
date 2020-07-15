@@ -14,7 +14,7 @@ class _PluginDevPageState extends State<PluginDevPage> {
   //通道的客户端和宿主通过通道构造函数中传递的通道名称进行连接。
   //单个应用中使用的所有通道名称必须是唯一的;
   //我们建议在通道名称前加一个唯一的“域名前缀”，例如samples.flutter.io/battery
-  static const platform = const MethodChannel('samples.flutter.io/battery');
+  static const platform = const MethodChannel('samples.flutter.io/common');
   static const platform1 =
       const MethodChannel('com.mrper.framework.plugins/toast');
   static const platform_amap = const EventChannel('com.hb.wobei.plugins/amap');
@@ -36,6 +36,10 @@ class _PluginDevPageState extends State<PluginDevPage> {
     setState(() {
       _batteryLevel = batteryLevel;
     });
+  }
+
+  void logD(String tag, String text){
+    platform.invokeMethod('logD', {'text': tag, 'text': text});
   }
 
   Future<Null> _goToSecondActivity() async {

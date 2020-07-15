@@ -40,7 +40,10 @@ dependencies:
   frame_animate_widget: ^1.0.0 # 帧动画
   pull_to_refresh: ^1.6.0 # 列表下拉刷新
   cached_network_image: ^2.2.0+1 # 显示网络图像并在缓存目录保留这些图像的flutter库
-  flutter_webview_plugin: ^0.3.11 # 网页插件
+  flutter_webview_plugin: ^0.3.11 # 网页插件，注意IOS需要额外配置
+  image_picker: ^0.6.7+4 # 相片选择
+  image_cropper: ^1.2.3 # 相片裁剪，注意Android需要额外配置
+  keyboard_visibility: ^0.5.6 # 监听键盘的弹起和关闭
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:wobei/bean/Pair.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/lesson/eventbus/EventBus.dart';
 import 'package:wobei/my_lib/Req.dart';
@@ -180,7 +181,7 @@ class _CertificationPageState extends State<CertificationPage> with BaseUtils {
           if(buttonColor == Config.BLACK_303133){
             Req.certification(valueRealName, valueIdCardNumber, (msg){
               ToastUtils.show('实名认证成功');
-              bus.emit('PersonalInfoPage', 'certificated');
+              bus.emit('PersonalInfoPage', Pair(first: 'certificated', second: true));
               Navigator.of(context).pop();
             }, (msg){
               ToastUtils.show(msg);

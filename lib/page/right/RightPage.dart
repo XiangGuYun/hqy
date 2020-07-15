@@ -3,12 +3,17 @@ import 'package:wobei/constant/Config.dart';
 import 'package:wobei/widget/MyIndicator.dart';
 import 'package:wobei/widget/MyTab.dart';
 
-class MyApp extends StatefulWidget {
+///********************************************************************************************
+///
+/// 权益界面
+///
+///********************************************************************************************
+class RightPage extends StatefulWidget {
   @override
   _MyAppState createState() => _MyAppState();
 }
 
-class _MyAppState extends State<MyApp> with SingleTickerProviderStateMixin {
+class _MyAppState extends State<RightPage> with SingleTickerProviderStateMixin {
   TabController _controller;
   TextStyle selectStyle, unSelectStyle;
   int currentIndex = 0;

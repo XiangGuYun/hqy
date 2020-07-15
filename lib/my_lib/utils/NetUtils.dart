@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
@@ -35,8 +36,7 @@ class NetUtils {
   static void post(
       String url, Map<String, String> parameters, Function getResult,
       {handleBySelf = false}) async {
-
-    if(url == URL.LOOKUP_DATA){
+    if (url == URL.LOOKUP_DATA) {
       print(1);
     }
 
@@ -56,7 +56,8 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
+    if (Global.prefs.getString('token') != null &&
+        Global.prefs.getString('token').isNotEmpty) {
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -119,7 +120,8 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
+    if (Global.prefs.getString('token') != null &&
+        Global.prefs.getString('token').isNotEmpty) {
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -183,7 +185,8 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
+    if (Global.prefs.getString('token') != null &&
+        Global.prefs.getString('token').isNotEmpty) {
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -240,7 +243,8 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
+    if (Global.prefs.getString('token') != null &&
+        Global.prefs.getString('token').isNotEmpty) {
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -264,6 +268,51 @@ class NetUtils {
         queryParameters: parameters, options: options);
     Uint8List bytes = consolidateHttpClientResponseBytes(response.data);
     return bytes;
+  }
+
+  ///---------------------------------------------------------------------------
+  ///
+  /// 上传二进制图片文件
+  ///
+  /// 参考文章：https://cloud.tencent.com/developer/article/1582593
+  ///
+  /// 返回值：Future<Uint8List>，需用Image.memory显示
+  ///
+  ///---------------------------------------------------------------------------
+  static void uploadImage(String url, File file, Function callback) async {
+    //放置请求头参数
+    var headers = Map<String, dynamic>();
+    var parameters = Map<String, String>();
+
+    //获取当前时间
+    var currentTime = System.currentTimeMillis().toString();
+
+    //生成md5加密数据
+    var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
+    headers['Hb-sign'] = hbSign;
+
+    //将md5数据放入请求头
+    var options = Options(headers: headers);
+    //将共同参数放入到map中
+    parameters['c'] = 'HB_ANDROID_USER';
+    parameters['d'] = Global.deviceId;
+    parameters['t'] = currentTime;
+    parameters['v'] = '1.5.0';
+
+    var dio = Dio();
+    var formData = FormData.fromMap({
+      "file": await MultipartFile.fromFile(file.path, filename: "avatar.jpg"),
+    });
+    Response response = await dio.post(
+        URL.BASE_URL +
+            url +
+            '?c=HB_ANDROID_USER&v=1.5.0&t=${currentTime}&d=${Global.deviceId}',
+        data: formData,
+        options: options,
+        queryParameters: parameters);
+    callback(response.data['code'], response.data['msg'],
+        response.data['success'], response.data['data']);
+    print(response.data.toString());
   }
 
   ///---------------------------------------------------------------------------

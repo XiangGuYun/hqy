@@ -1,12 +1,18 @@
+import 'dart:convert';
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:dio/dio.dart';
 import 'package:wobei/bean/LoginData.dart';
 import 'package:wobei/bean/MeData.dart';
+import 'package:wobei/bean/MyCardData.dart';
 import 'package:wobei/bean/SearchWord.dart';
 import 'package:wobei/constant/URL.dart';
+import 'package:wobei/my_lib/utils/DartUtils.dart';
 import 'package:wobei/my_lib/utils/NetUtils.dart';
 import 'package:wobei/my_lib/utils/ToastUtils.dart';
+import 'package:wobei/plugin/LogPlugin.dart';
+import 'package:wobei/plugin/ToastPlugin.dart';
 
 ///*****************************************************************************
 /// 管理所有的接口请求
@@ -37,10 +43,23 @@ class Req {
   /// 获取图片验证码
   ///---------------------------------------------------------------------------
   static Future<Uint8List> getPicVerificationCode(String phone) {
-    return NetUtils.getBitmap(URL.VERIFY_PIC, Map<String, String>()..['phone'] = phone);
+    return NetUtils.getBitmap(
+        URL.VERIFY_PIC, Map<String, String>()..['phone'] = phone);
   }
 
-
+  ///---------------------------------------------------------------------------
+  /// 上传头像
+  ///---------------------------------------------------------------------------
+  static void uploadAvatar(File file, Function callback) {
+    NetUtils.uploadImage(URL.UPLOAD_AVATAR, file, (c, m, s, d) {
+      if (s) {
+        ToastUtils.show('上传成功');
+        callback(d['url']);
+      } else {
+        ToastUtils.show(m);
+      }
+    });
+  }
 
   ///---------------------------------------------------------------------------
   /// 获取轮播栏的信息
@@ -110,9 +129,10 @@ class Req {
   /// verifyPictureCode 图片验证码
   ///
   ///---------------------------------------------------------------------------
-  static void getVCode(String phone, Function callback, {String verifyPictureCode}) {
+  static void getVCode(String phone, Function callback,
+      {String verifyPictureCode}) {
     Map params = Map<String, String>()..['phone'] = phone;
-    if(verifyPictureCode != null){
+    if (verifyPictureCode != null) {
       params['verifyPictureCode'] = verifyPictureCode;
     }
     NetUtils.post(URL.SEND_MESSAGE, params, (c, m, s, d) {
@@ -123,9 +143,9 @@ class Req {
   ///---------------------------------------------------------------------------
   /// 获取“我的”信息
   ///---------------------------------------------------------------------------
-  static void getMeInfo(Function callback){
+  static void getMeInfo(Function callback) {
     Map params = Map<String, String>();
-    NetUtils.post(URL.LOOKUP_DATA, params, (c, m, s, d){
+    NetUtils.post(URL.LOOKUP_DATA, params, (c, m, s, d) {
       callback(MeData.fromJson(d));
     });
   }
@@ -133,12 +153,13 @@ class Req {
   ///---------------------------------------------------------------------------
   /// 实名认证
   ///---------------------------------------------------------------------------
-  static void certification(String name, String idCard, Function success, Function failure){
+  static void certification(
+      String name, String idCard, Function success, Function failure) {
     Map params = Map<String, String>();
     params['name'] = name;
     params['idCard'] = idCard;
-    NetUtils.post(URL.CERTIFICATION, params, (c, m, s, d){
-      if(d == true){
+    NetUtils.post(URL.CERTIFICATION, params, (c, m, s, d) {
+      if (d == true) {
         success(m);
       } else {
         failure(m);
@@ -146,4 +167,41 @@ class Req {
     });
   }
 
+  ///---------------------------------------------------------------------------
+  /// 修改我的信息
+  ///---------------------------------------------------------------------------
+  static void modifyMeInfo(Map<String, String> params, Function success) {
+    NetUtils.post(URL.MODIFY_DATA, params, (c, m, s, d) {
+      if (d == true) {
+        success();
+      } else {
+        ToastUtils.show(m);
+      }
+    });
+  }
+
+  ///---------------------------------------------------------------------------
+  /// 获取我的权益卡券
+  ///---------------------------------------------------------------------------
+  static void getMyCard(Function callback) {
+    Map params = Map<String, String>();
+    NetUtils.post(URL.FEN_YE_LIST, params, (c, m, s, d) {
+//      LogPlugin.logD('Test123', json.encode(d));
+      callback(MyCardData.fromJson(d));
+    });
+  }
+
+  ///---------------------------------------------------------------------------
+  /// 获取我的企业信息
+  ///---------------------------------------------------------------------------
+  static void viewMyEnterpriseInfo(Function callback){
+    Map params = Map<String, String>();
+    NetUtils.post(URL.CHA_KAN_WO_DE_QI_YE_XIN_XI, params, (c, m, s, d) {
+      if(d==null){
+        callback(-1, '-1');
+      } else {
+        callback(d['customerId'], d['customerName']);
+      }
+    });
+  }
 }

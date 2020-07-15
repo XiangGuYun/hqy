@@ -8,7 +8,7 @@ import io.flutter.plugin.common.MethodChannel
 object ToastProviderPlugin {
 
     /** Channel名称  **/
-    private const val ChannelName = "com.mrper.framework.plugins/toast"
+    private const val ChannelName = "com.hb.wobei.plugins/log"
 
     /**
      * 注册Toast插件
