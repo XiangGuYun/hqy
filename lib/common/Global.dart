@@ -18,6 +18,8 @@ class Global {
   /// 共享配置
   static SharedPreferences prefs;
 
+  static String token;
+
   /// 是否为release版
   static bool get isRelease => bool.fromEnvironment("dart.vm.product");
 
@@ -36,7 +38,9 @@ class Global {
   /// 初始化全局信息，会在APP启动时执行
   static Future init() async {
     prefs = await SharedPreferences.getInstance();
-
+  
+    token = prefs.getString('token');
+    
     AppUtils.getDeviceId((id){
       deviceId = id;
     });

@@ -56,7 +56,7 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token').isNotEmpty){
+    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -119,7 +119,7 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token').isNotEmpty){
+    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -183,7 +183,7 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token').isNotEmpty){
+    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 
@@ -240,7 +240,7 @@ class NetUtils {
     var hbSign = _generateMd5('HB_ANDROID_USER${currentTime}1.5.0');
     headers['Hb-sign'] = hbSign;
 
-    if(Global.prefs.getString('token').isNotEmpty){
+    if(Global.prefs.getString('token') != null && Global.prefs.getString('token').isNotEmpty){
       headers['Authorization'] = 'Bearer ${Global.prefs.getString('token')}';
     }
 

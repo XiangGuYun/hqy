@@ -40,11 +40,16 @@ class TitleBar extends StatelessWidget with BaseUtils {
         children: <Widget>[
           Padding(
             child: Align(
-              child: Image.asset(
-                'assets/images/back_black.png',
-                width: 22,
-                height: 22,
-                fit: BoxFit.cover,
+              child: GestureDetector(
+                child: Image.asset(
+                  'assets/images/back_black.png',
+                  width: 22,
+                  height: 22,
+                  fit: BoxFit.cover,
+                ),
+                onTap: (){
+                  Navigator.of(context).pop();
+                },
               ),
               alignment: Alignment(-1, 0),
             ),

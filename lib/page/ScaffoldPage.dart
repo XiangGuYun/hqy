@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:wobei/common/Global.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/lesson/eventbus/EventBus.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
@@ -35,7 +36,7 @@ class _AppState extends State<ScaffoldPage> with BaseUtils {
   PageController _pageController;
 
   /// 是否处于登录状态
-  var isLogin = false;
+  var isLogin = Global.token != null && Global.token.isNotEmpty;
 
   @override
   void initState() {

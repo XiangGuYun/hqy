@@ -16,7 +16,7 @@ class MeData {
     int throneCardNotUseNum;
     String totalMoney;
     String totalScore;
-    String type;
+    int type;
     int welfareCardNotUseNum;
 
     MeData({this.address, this.certStatus, this.dueTime, this.dueTimeDay, this.gender, this.headPicture, this.id, this.idNumber, this.isChange, this.messageNotReadNum, this.name, this.nickname, this.phone, this.state, this.throneCardNotUseNum, this.totalMoney, this.totalScore, this.type, this.welfareCardNotUseNum});

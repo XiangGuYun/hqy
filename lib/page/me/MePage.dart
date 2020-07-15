@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:wobei/bean/MeData.dart';
+import 'package:wobei/constant/AppRoute.dart';
 import 'package:wobei/constant/Config.dart';
 import 'package:wobei/my_lib/Req.dart';
 import 'package:wobei/my_lib/base/BaseState.dart';
 import '../../my_lib/extension/BaseExtension.dart';
 
 ///*****************************************************************************
+///
 /// 我的
+///
 ///*****************************************************************************
 class MePage extends StatefulWidget {
   @override
@@ -15,12 +18,32 @@ class MePage extends StatefulWidget {
 
 class _AppState extends State<MePage>
     with AutomaticKeepAliveClientMixin, BaseUtils {
+  String valueNickName = '';
+
+  String valueHeBei = '';
+
+  String valueMoney = '';
+
+  var valueAvatarImg = '';
+
+  MeData me = null;
+
 
   @override
   void initState() {
     super.initState();
-    Req.getMeInfo((MeData me){
-
+    Req.getMeInfo((MeData me) {
+      this.me = me;
+      setState(() {
+        // 昵称
+        valueNickName = me.nickname;
+        // 禾贝余额
+        valueHeBei = me.totalScore;
+        // 零钱余额
+        valueMoney = me.totalMoney;
+        // 头像
+        valueAvatarImg = me.headPicture;
+      });
     });
   }
 
@@ -65,12 +88,17 @@ class _AppState extends State<MePage>
                     right: 20,
                   ),
                   Positioned(
-                    child: Text(
-                      '小贝的鞋匠',
-                      style: TextStyle(
-                        fontSize: 28,
-                        color: Colors.white,
+                    child: GestureDetector(
+                      child: Text(
+                        valueNickName,
+                        style: TextStyle(
+                          fontSize: 28,
+                          color: Colors.white,
+                        ),
                       ),
+                      onTap: (){
+                        Navigator.of(context).pushNamed(AppRoute.PERSONAL_INFO, arguments: me);
+                      },
                     ),
                     left: 20,
                     top: 50 + getStatusBarHeight(),
@@ -84,20 +112,17 @@ class _AppState extends State<MePage>
                     top: 89 + getStatusBarHeight(),
                   ),
                   Positioned(
-                    child: Image.asset(
-                      Config.DEFAULT_AVATAR,
-                      width: 60,
-                      height: 60,
-                      fit: BoxFit.cover,
-                    ).setClipOval(),
+                    child: getAvatar(valueAvatarImg).setClipOval(),
                     right: 20,
                     top: 54 + getStatusBarHeight(),
                   ),
                   Positioned(
                     child: Text(
-                      '240',
+                      valueHeBei,
                       style: TextStyle(
-                          fontSize: 22, color: Colors.white, fontFamily: 'money'),
+                          fontSize: 22,
+                          color: Colors.white,
+                          fontFamily: 'money'),
                     ),
                     left: 20,
                     bottom: 122,
@@ -112,9 +137,11 @@ class _AppState extends State<MePage>
                   ),
                   Positioned(
                     child: Text(
-                      '8298.48',
+                      valueMoney,
                       style: TextStyle(
-                          fontSize: 22, color: Colors.white, fontFamily: 'money'),
+                          fontSize: 22,
+                          color: Colors.white,
+                          fontFamily: 'money'),
                     ),
                     left: 120,
                     bottom: 122,
@@ -220,7 +247,8 @@ class _AppState extends State<MePage>
                       ),
                       Text(
                         '8张未使用',
-                        style: TextStyle(fontSize: 10, color: Config.GREY_A5A3AC),
+                        style: TextStyle(
+                            fontSize: 10, color: Config.GREY_A5A3AC),
                       ),
                     ],
                   ).setExpanded(1),
@@ -249,7 +277,8 @@ class _AppState extends State<MePage>
                       ),
                       Text(
                         '16个未使用',
-                        style: TextStyle(fontSize: 10, color: Config.GREY_A5A3AC),
+                        style: TextStyle(
+                            fontSize: 10, color: Config.GREY_A5A3AC),
                       ),
                     ],
                   ).setExpanded(1),
@@ -278,7 +307,8 @@ class _AppState extends State<MePage>
                       ),
                       Text(
                         ' ',
-                        style: TextStyle(fontSize: 10, color: Config.GREY_A5A3AC),
+                        style: TextStyle(
+                            fontSize: 10, color: Config.GREY_A5A3AC),
                       ),
                     ],
                   ).setExpanded(1)
@@ -336,9 +366,11 @@ class _AppState extends State<MePage>
                         fit: BoxFit.cover,
                       ).setClipRRect(4.0),
                       SizedBox(height: 10,),
-                      Text('爱奇艺钻石会员月卡', style: TextStyle(fontSize: 14, color: Config.BLACK_303133),),
+                      Text('爱奇艺钻石会员月卡', style: TextStyle(
+                          fontSize: 14, color: Config.BLACK_303133),),
                       SizedBox(height: 4,),
-                      Text('有效期至2019.09.12', style: TextStyle(fontSize: 12, color: Config.GREY_A5A3AC),),
+                      Text('有效期至2019.09.12', style: TextStyle(
+                          fontSize: 12, color: Config.GREY_A5A3AC),),
                     ],
                   ),
                   SizedBox(
@@ -354,9 +386,11 @@ class _AppState extends State<MePage>
                         fit: BoxFit.cover,
                       ).setClipRRect(4.0),
                       SizedBox(height: 10,),
-                      Text('爱奇艺钻石会员月卡', style: TextStyle(fontSize: 14, color: Config.BLACK_303133),),
+                      Text('爱奇艺钻石会员月卡', style: TextStyle(
+                          fontSize: 14, color: Config.BLACK_303133),),
                       SizedBox(height: 4,),
-                      Text('有效期至2019.09.12', style: TextStyle(fontSize: 12, color: Config.GREY_A5A3AC),),
+                      Text('有效期至2019.09.12', style: TextStyle(
+                          fontSize: 12, color: Config.GREY_A5A3AC),),
                     ],
                   ),
                   SizedBox(
@@ -372,9 +406,11 @@ class _AppState extends State<MePage>
                         fit: BoxFit.cover,
                       ).setClipRRect(4.0),
                       SizedBox(height: 10,),
-                      Text('爱奇艺钻石会员月卡', style: TextStyle(fontSize: 14, color: Config.BLACK_303133),),
+                      Text('爱奇艺钻石会员月卡', style: TextStyle(
+                          fontSize: 14, color: Config.BLACK_303133),),
                       SizedBox(height: 4,),
-                      Text('有效期至2019.09.12', style: TextStyle(fontSize: 12, color: Config.GREY_A5A3AC),),
+                      Text('有效期至2019.09.12', style: TextStyle(
+                          fontSize: 12, color: Config.GREY_A5A3AC),),
                     ],
                   ),
                   SizedBox(
@@ -390,9 +426,11 @@ class _AppState extends State<MePage>
                         fit: BoxFit.cover,
                       ).setClipRRect(4.0),
                       SizedBox(height: 10,),
-                      Text('爱奇艺钻石会员月卡', style: TextStyle(fontSize: 14, color: Config.BLACK_303133),),
+                      Text('爱奇艺钻石会员月卡', style: TextStyle(
+                          fontSize: 14, color: Config.BLACK_303133),),
                       SizedBox(height: 4,),
-                      Text('有效期至2019.09.12', style: TextStyle(fontSize: 12, color: Config.GREY_A5A3AC),),
+                      Text('有效期至2019.09.12', style: TextStyle(
+                          fontSize: 12, color: Config.GREY_A5A3AC),),
                     ],
                   ),
                   SizedBox(
@@ -408,9 +446,11 @@ class _AppState extends State<MePage>
                         fit: BoxFit.cover,
                       ).setClipRRect(4.0),
                       SizedBox(height: 10,),
-                      Text('爱奇艺钻石会员月卡', style: TextStyle(fontSize: 14, color: Config.BLACK_303133),),
+                      Text('爱奇艺钻石会员月卡', style: TextStyle(
+                          fontSize: 14, color: Config.BLACK_303133),),
                       SizedBox(height: 4,),
-                      Text('有效期至2019.09.12', style: TextStyle(fontSize: 12, color: Config.GREY_A5A3AC),),
+                      Text('有效期至2019.09.12', style: TextStyle(
+                          fontSize: 12, color: Config.GREY_A5A3AC),),
                     ],
                   ),
                   SizedBox(
@@ -428,4 +468,17 @@ class _AppState extends State<MePage>
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget getAvatar(String valueAvatarImg) {
+    return valueAvatarImg.isEmpty ?
+    Image.asset(
+      Config.DEFAULT_AVATAR,
+      width: 60,
+      height: 60,
+      fit: BoxFit.cover,
+    ) :
+    Image.network(valueAvatarImg, width: 60,
+      height: 60,
+      fit: BoxFit.cover,);
+  }
 }

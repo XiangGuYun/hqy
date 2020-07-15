@@ -1,8 +1,8 @@
 ///管理所有接口
 class URL {
-  static const String BASE_URL =  "https://api.hbei.vip"; //正式
+//  static const String BASE_URL =  "https://api.hbei.vip"; //正式
 //  static const String BASE_URL =  "http://106.12.176.120"; //开发
-//  static const String BASE_URL = "https://test-api.hbei.vip"; //测试
+  static const String BASE_URL = "https://test-api.hbei.vip"; //测试
 
   static const String MODIFY_DATA = "/account/app/user/mine/edit"; //我的-修改资料
   static const String LOOKUP_DATA = "/account/app/user/mine/select"; //我的-查询资料

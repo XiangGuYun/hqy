@@ -22,6 +22,7 @@ class Config{
   static const Color GREY_C9C8CD = Color(0xFFC9C8CD);
   static const Color GREY_C0C4CC = Color(0xFFC0C4CC);
   static const Color GREY_A5A3AC = Color(0xFFA5A3AC);
+  static const Color GREY_909399 = Color(0xFF909399);
   static const Color RED_B3926F = Color(0xFFB3926F);
   static const Color GOLD_FFE2C0 = Color(0xFFFFE2C0);
   //黑色按钮按下后的背景色
@@ -30,6 +31,7 @@ class Config{
   static const Color BTN_ENABLE_FALSE = Color(0xff909399);
   //分割线颜色
   static const Color DIVIDER_COLOR = Color(0xffedecee);
+
 
   ///---------------------------------------------------------------------------
   /// 图片资源

@@ -126,8 +126,23 @@ class Req {
   static void getMeInfo(Function callback){
     Map params = Map<String, String>();
     NetUtils.post(URL.LOOKUP_DATA, params, (c, m, s, d){
-      ToastUtils.show(m.toString());
       callback(MeData.fromJson(d));
+    });
+  }
+
+  ///---------------------------------------------------------------------------
+  /// 实名认证
+  ///---------------------------------------------------------------------------
+  static void certification(String name, String idCard, Function success, Function failure){
+    Map params = Map<String, String>();
+    params['name'] = name;
+    params['idCard'] = idCard;
+    NetUtils.post(URL.CERTIFICATION, params, (c, m, s, d){
+      if(d == true){
+        success(m);
+      } else {
+        failure(m);
+      }
     });
   }
 
